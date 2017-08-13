@@ -45,3 +45,28 @@ ionic cordova platform add android
 ```bash
 ionic cordova run android --device
 ```
+
+## Debug on iOS
+
+1. Make sure required app is setup
+  - Install xcode, xcode-select and ios-deploy
+    ```bash
+    xcode-select --install
+    npm install -g --unsafe-perm=true ios-deploy
+    ```
+
+2. Make sure cordova iOS support is added
+```bash
+ionic cordova platform add ios
+```
+
+3. Generate Xcode project file
+  ```bash
+  ionic cordova build ios
+  ```
+  - Open Xcode project file, use apple id to set up a provisioning profile to code sign the app, please refer to http://ionicframework.com/docs/intro/deploying/
+
+4. Run the following command and trust the certificate on iOS device
+```bash
+ionic cordova run ios --device
+```
