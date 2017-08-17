@@ -2,26 +2,26 @@
 
 > HandyNote - Mobile App for iOS and Android
 
-## Prerequisite
+## Build Setup
 
-1. Make sure cordova, ionic is installed globally
-  ``` bash
-  # Optional, set npm mirror to speed up npm install in China
-  npm config set registry https://registry.npm.taobao.org
+``` bash
+# Optional, set npm mirror to speed up npm install in China
+npm config set registry https://registry.npm.taobao.org
 
-  # install cordova & ionic globally
-  npm install -g cordova ionic
-  ```
+# install cordova globally
+npm install -g cordova
 
-2. Make sure all dependencies got installed
-  ```bash
-  # run under project root folder
-  npm install
-  ```
+# install dependencies
+npm install
 
-## Debug on browser
-```bash
-ionic serve --lab
+# serve with hot reload at localhost:9081
+npm run dev
+
+# build for production with minification
+npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report
 ```
 
 ## Debug on android
@@ -38,12 +38,12 @@ ionic serve --lab
 
 2. Make sure cordova android support is added
 ```bash
-ionic cordova platform add android
+cordova platform add android
 ```
 
 3. Enable USB debugging and Developer Mode on Android device
 ```bash
-ionic cordova run android --device
+npm run android
 ```
 
 ## Debug on iOS
@@ -57,16 +57,16 @@ ionic cordova run android --device
 
 2. Make sure cordova iOS support is added
 ```bash
-ionic cordova platform add ios
+cordova platform add ios
 ```
 
 3. Generate Xcode project file
   ```bash
-  ionic cordova build ios
+  cordova build ios
   ```
-  - Open Xcode project file, use apple id to set up a provisioning profile to code sign the app, please refer to http://ionicframework.com/docs/intro/deploying/
+  - Open Xcode project file, use apple id to set up a provisioning profile to code sign the app
 
 4. Run the following command and trust the certificate on iOS device
 ```bash
-ionic cordova run ios --device
+npm run ios
 ```
