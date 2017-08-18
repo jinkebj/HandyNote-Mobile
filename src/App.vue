@@ -20,9 +20,7 @@
       </md-toolbar>
     </md-whiteframe>
 
-
-
-    <md-list class="page-content md-triple-line">
+    <div class="page-content">
       <md-speed-dial md-open="click" md-direction="top" class="md-fab-bottom-right">
         <md-button class="md-fab" md-fab-trigger>
           <md-icon md-icon-morph>close</md-icon>
@@ -37,64 +35,22 @@
           <md-icon>alarm_add</md-icon>
         </md-button>
       </md-speed-dial>
-      <md-list-item>
-        <md-avatar class="md-avatar-icon">
-          <md-icon>folder</md-icon>
-        </md-avatar>
-
-        <div class="md-list-text-container">
-          <span>Ali Connors</span>
-          <p>I'll be in your neighborhood doing errands...</p>
-          <p>Jan 20, 2014</p>
-        </div>
-
-        <md-button class="md-icon-button md-list-action">
-          <md-icon>more_vert</md-icon>
-        </md-button>
-
-        <md-divider class="md-inset"></md-divider>
-      </md-list-item>
-
-      <md-list-item>
-        <md-avatar class="md-avatar-icon md-primary">
-          <md-icon>insert_drive_file</md-icon>
-        </md-avatar>
-
-        <div class="md-list-text-container">
-          <span>Vacation Itinerary</span>
-          <span>testtestsets</span>
-          <p>Jan 20, 2014</p>
-        </div>
-
-        <md-button class="md-icon-button md-list-action">
-          <md-icon>more_vert</md-icon>
-        </md-button>
-
-        <md-divider class="md-inset"></md-divider>
-      </md-list-item>
-
-      <md-list-item>
-        <md-avatar md-theme="orange" class="md-avatar-icon md-primary">
-          <md-icon>collections</md-icon>
-        </md-avatar>
-
-        <div class="md-list-text-container">
-          <span>Kitchen Remodel</span>
-          <span>testtestsets</span>
-          <p>Jan 10, 2014</p>
-        </div>
-
-        <md-button class="md-icon-button md-list-action">
-          <md-icon>more_vert</md-icon>
-        </md-button>
-      </md-list-item>
-    </md-list>
+      <router-view></router-view>
+    </div>
 
     <md-bottom-bar class="page-footer">
-      <md-bottom-bar-item md-icon="history">Recents</md-bottom-bar-item>
-      <md-bottom-bar-item md-icon="folder">Folders</md-bottom-bar-item>
-      <md-bottom-bar-item md-icon="favorite" md-active>Favorites</md-bottom-bar-item>
-      <md-bottom-bar-item md-icon="settings">Settings</md-bottom-bar-item>
+      <md-bottom-bar-item md-icon="history" :md-active="isActive('/recents')" @click="$router.replace('/recents')">
+        Recents
+      </md-bottom-bar-item>
+      <md-bottom-bar-item md-icon="folder" :md-active="isActive('/folders')" @click="$router.replace('/folders')">
+        Folders
+      </md-bottom-bar-item>
+      <md-bottom-bar-item md-icon="favorite" :md-active="isActive('/favorites')" @click="$router.replace('/favorites')">
+        Favorites
+      </md-bottom-bar-item>
+      <md-bottom-bar-item md-icon="settings" :md-active="isActive('/settings')" @click="$router.replace('/settings')">
+        Settings
+      </md-bottom-bar-item>
     </md-bottom-bar>
   </div>
 </template>
@@ -132,6 +88,12 @@ body {
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+
+  methods: {
+    isActive (path) {
+      return this.$route.path === path
+    }
+  }
 }
 </script>
