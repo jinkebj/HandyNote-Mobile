@@ -81,6 +81,7 @@ devMiddleware.waitUntilValid(() => {
 })
 
 var server = app.listen(port)
+server.on('connection', socket => socket.setTimeout(30000))
 
 module.exports = {
   ready: readyPromise,
