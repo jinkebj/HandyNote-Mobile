@@ -2,11 +2,9 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 
+// import vue-material
 import 'vue-material/dist/vue-material.css'
 import VueMaterial from 'vue-material'
-
-import App from './App'
-import router from './router'
 
 Vue.use(VueMaterial)
 Vue.material.registerTheme({
@@ -23,6 +21,13 @@ Vue.material.registerTheme({
     accent: 'green'
   }
 })
+
+// import Material Icons
+import '@/assets/fonts/material-icons.css'
+
+// import HandyNote components
+import App from './App'
+import router from './router'
 
 Vue.config.productionTip = false
 
