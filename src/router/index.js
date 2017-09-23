@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Login from '@/views/Login'
+import Login from '@/views/Login'
 import Recents from '@/views/Recents'
 import Folders from '@/views/Folders'
 import Favorites from '@/views/Favorites'
@@ -10,10 +10,10 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    // {
-    //   path: '/login',
-    //   component: Login
-    // },
+    {
+      path: '/login',
+      component: Login
+    },
     {
       path: '/recents',
       component: Recents
