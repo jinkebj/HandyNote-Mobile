@@ -1,71 +1,54 @@
 <template>
   <md-list class="md-triple-line">
-
-    <md-list-item>
-      <md-avatar class="md-avatar-icon">
-        <md-icon>folder</md-icon>
-      </md-avatar>
-
+    <md-list-item class="list-item-divider" v-for="listItem in listItems" :key="listItem._id">
       <div class="md-list-text-container">
-        <span>Ali Connors</span>
-        <p>I'll be in your neighborhood doing errands...</p>
-        <p>Jan 20, 2014</p>
+        <span class="list-item-name">{{listItem.name | truncate(50)}}</span>
+        <p>{{listItem.digest | truncate(100)}}</p>
+        <p>{{listItem.updated_at | fmtDate}} {{listItem.folder_name}}</p>
       </div>
 
       <md-button class="md-icon-button md-list-action">
         <md-icon>more_vert</md-icon>
       </md-button>
-
-      <md-divider class="md-inset"></md-divider>
     </md-list-item>
-
-    <md-list-item>
-      <md-avatar class="md-avatar-icon md-primary">
-        <md-icon>insert_drive_file</md-icon>
-      </md-avatar>
-
-      <div class="md-list-text-container">
-        <span>Vacation Itinerary</span>
-        <span>testtestsets</span>
-        <p>Jan 20, 2014</p>
-      </div>
-
-      <md-button class="md-icon-button md-list-action">
-        <md-icon>more_vert</md-icon>
-      </md-button>
-
-      <md-divider class="md-inset"></md-divider>
-    </md-list-item>
-
-    <md-list-item>
-      <md-avatar md-theme="orange" class="md-avatar-icon md-primary">
-        <md-icon>collections</md-icon>
-      </md-avatar>
-
-      <div class="md-list-text-container">
-        <span>Kitchen Remodel</span>
-        <span>testtestsets</span>
-        <p>Jan 10, 2014</p>
-      </div>
-
-      <md-button class="md-icon-button md-list-action">
-        <md-icon>more_vert</md-icon>
-      </md-button>
-
-      <md-divider class="md-inset"></md-divider>
-    </md-list-item>
-
   </md-list>
 </template>
 
 <style scoped>
+.list-item-name {
+  font-size: 18px;
+  font-weight:bold;
+}
 
+.list-item-divider {
+  border-bottom: 1px solid #ddd;
+}
 </style>
 
 <script>
+import Model from '@/models'
+
 export default {
   data () {
     return {
+      listItems: []
+    }
+  },
+
+  mounted () {
+    this.loadNoteList()
+  },
+
+  methods: {
+    loadNoteList (params) {
+      const self = this
+      Model.getNoteList(params)
+        .then(function (response) {
+          self.listItems = response.data
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   }
 }
