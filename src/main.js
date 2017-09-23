@@ -22,9 +22,6 @@ Vue.material.registerTheme({
   }
 })
 
-// import Material Icons
-import '@/assets/fonts/material-icons.css'
-
 // import HandyNote components
 import App from './App'
 import router from './router'
