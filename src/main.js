@@ -23,10 +23,41 @@ Vue.material.registerTheme({
 })
 
 // import HandyNote components
-import App from './App'
-import router from './router'
+import App from '@/App'
+import Model from '@/models'
+import router from '@/router'
+import * as filters from '@/util/filters'
 
 Vue.config.productionTip = false
+
+// register filters
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
+
+// add request interceptor
+Model.getHttpPrototype().interceptors.request.use(
+  (config) => {
+    config.headers['X-Auth-Token'] = window.localStorage.getItem('hn-token')
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  }
+)
+
+// add response interceptor
+Model.getHttpPrototype().interceptors.response.use(
+  (response) => {
+    return response
+  },
+  (error) => {
+    if (error.response.status === 401) {
+      window.location.href = './#/login'
+      return error.response
+    }
+  }
+)
 
 /* eslint-disable no-new */
 new Vue({

@@ -1,37 +1,38 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import RecentList from '@/components/RecentList'
-import FolderList from '@/components/FolderList'
-import FavoriteList from '@/components/FavoriteList'
-import SettingPage from '@/components/SettingPage'
+// import Login from '@/views/Login'
+import Recents from '@/views/Recents'
+import Folders from '@/views/Folders'
+import Favorites from '@/views/Favorites'
+import Settings from '@/views/Settings'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
-      path: '/',
-      redirect: '/recents'
-    },
+    // {
+    //   path: '/login',
+    //   component: Login
+    // },
     {
       path: '/recents',
-      name: 'RecentList',
-      component: RecentList
+      component: Recents
     },
     {
       path: '/folders',
-      name: 'FolderList',
-      component: FolderList
-    },
-    {
-      path: '/settings',
-      name: 'SettingPage',
-      component: SettingPage
+      component: Folders
     },
     {
       path: '/favorites',
-      name: 'FavoriteList',
-      component: FavoriteList
+      component: Favorites
+    },
+    {
+      path: '/settings',
+      component: Settings
+    },
+    {
+      path: '*',
+      redirect: '/recents'
     }
   ]
 })

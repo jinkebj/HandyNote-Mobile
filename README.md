@@ -14,6 +14,11 @@ npm install -g cordova
 # install dependencies
 npm install
 
+# Optional, set HANDYNOTE_WEB_PORT & HANDYNOTE_SERVICE_API
+# if not set, will use HANDYNOTE_WEB_PORT=9081, HANDYNOTE_SERVICE_API=http://localhost:3000/api
+export HANDYNOTE_WEB_PORT={portnum}
+export HANDYNOTE_SERVICE_API=http://IP:Port/api
+
 # serve with hot reload at localhost:9081
 npm run dev
 
