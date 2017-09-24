@@ -7,26 +7,15 @@
       <my-note-folder></my-note-folder>
     </div>
 
-    <my-footer></my-footer>
+    <my-footer class="page-footer"></my-footer>
   </div>
 </template>
 
 <style scoped>
 .page {
-  height: 100%; /* needed for proper layout */
-}
-
-body {
-  overflow: hidden;
-}
-
-.page {
+  height: 100%;
   display: flex;
   flex-direction: column;
-}
-
-.page-header {
-  flex: 0 0 auto;
 }
 
 .page-content {

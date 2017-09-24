@@ -10,6 +10,10 @@ html, body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.md-bottom-bar {
+  overflow: hidden; /* need this for iPhone5 */
+}
 </style>
 
 <script>

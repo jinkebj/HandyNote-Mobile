@@ -1,5 +1,5 @@
 <template>
-  <md-whiteframe md-elevation="3" class="page-header">
+  <md-whiteframe md-elevation="3">
     <md-toolbar class="md-dense">
       <div class="md-toolbar-container">
         <md-button class="md-icon-button">

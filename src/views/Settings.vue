@@ -4,30 +4,20 @@
 
     <div class="page-content">
       <div>
-        Settings
+        {{loginUser}}
+        <md-button class="md-raised md-primary" @click="logout">Logout</md-button>
       </div>
     </div>
 
-    <my-footer></my-footer>
+    <my-footer class="page-footer"></my-footer>
   </div>
 </template>
 
 <style scoped>
 .page {
-  height: 100%; /* needed for proper layout */
-}
-
-body {
-  overflow: hidden;
-}
-
-.page {
+  height: 100%;
   display: flex;
   flex-direction: column;
-}
-
-.page-header {
-  flex: 0 0 auto;
 }
 
 .page-content {
@@ -42,6 +32,7 @@ body {
 </style>
 
 <script>
+import {getCurUsrId} from '@/util'
 import MyHeader from '@/components/TopBar'
 import MyFooter from '@/components/BottomBar'
 
@@ -49,6 +40,20 @@ export default {
   components: {
     MyHeader,
     MyFooter
+  },
+
+  data () {
+    return {
+      loginUser: getCurUsrId()
+    }
+  },
+
+  methods: {
+    logout () {
+      window.localStorage.removeItem('hn-token')
+      window.localStorage.removeItem('hn-user')
+      this.$router.replace('/login')
+    }
   }
 }
 </script>

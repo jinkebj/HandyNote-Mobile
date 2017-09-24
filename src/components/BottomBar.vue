@@ -1,5 +1,5 @@
 <template>
-  <md-bottom-bar class="page-footer">
+  <md-bottom-bar>
     <md-bottom-bar-item md-icon="history" :md-active="isActive('/recents')" @click="$router.replace('/recents')">
       Recents
     </md-bottom-bar-item>
