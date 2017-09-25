@@ -1,31 +1,46 @@
 <template>
-  <mu-list>
-    <mu-list-item title="Sent mail">
-      <mu-icon slot="left" value="send"/>
-    </mu-list-item>
-    <mu-list-item title="Drafts">
-      <mu-icon slot="left" value="drafts"/>
-    </mu-list-item>
-    <mu-list-item title="Inbox" toggleNested>
-      <mu-icon slot="left" value="inbox"/>
-      <mu-list-item slot="nested" title="Starred">
-        <mu-icon slot="left" value="grade"/>
-      </mu-list-item>
-      <mu-list-item slot="nested" disabled title="Sent mail" toggleNested>
-        <mu-icon slot="left" value="send"/>
-        <mu-list-item title="Drafts" slot="nested">
-          <mu-icon slot="left" value="drafts"/>
+  <mu-list class="note-folder-container">
+    <mu-list-item title="My Folders (12 / 30)" toggleNested>
+      <mu-icon slot="left" value="home" />
+
+      <mu-list-item slot="nested" title="Added (10 / 23)" titleClass="note-folder-title" toggleNested>
+        <mu-list-item title="Drafts (5)" slot="nested" titleClass="note-folder-title">
+        </mu-list-item>
+
+        <mu-list-item title="Java (8)" slot="nested" titleClass="note-folder-title">
         </mu-list-item>
       </mu-list-item>
-      <mu-list-item slot="nested" title="Inbox" toggleNested>
-        <mu-icon slot="left" value="inbox"/>
-        <mu-list-item title="Drafts" slot="nested">
-          <mu-icon slot="left" value="drafts"/>
+
+      <mu-list-item slot="nested" title="Added (10 / 23)" titleClass="note-folder-title" toggleNested>
+        <mu-list-item title="Drafts (5)" slot="nested" titleClass="note-folder-title">
+        </mu-list-item>
+
+        <mu-list-item title="Java (8)" slot="nested" titleClass="note-folder-title">
         </mu-list-item>
       </mu-list-item>
+
+      <mu-list-item slot="nested" title="Updated (2 / 6)" titleClass="note-folder-title" toggleNested>
+        <mu-list-item title="Drafts (4)" slot="nested" titleClass="note-folder-title">
+        </mu-list-item>
+      </mu-list-item>
+
+    </mu-list-item>
+
+    <mu-list-item title="Trash (5)">
+      <mu-icon slot="left" value="delete"/>
     </mu-list-item>
   </mu-list>
 </template>
+
+<style>
+.note-folder-container .mu-item-wrapper {
+  border-bottom: 1px solid #ddd;
+}
+
+.note-folder-title {
+  font-size: 14px;
+}
+</style>
 
 <style scoped>
 
