@@ -9,7 +9,7 @@
       </div>
     </div>
 
-    <my-footer class="page-footer"></my-footer>
+    <my-footer></my-footer>
   </div>
 </template>
 
@@ -24,10 +24,6 @@
   flex: 1 1 auto;
   position: relative; /* need this to position inner content */
   overflow-y: auto;
-}
-
-.page-footer {
-  flex: 0 0 auto;
 }
 </style>
 

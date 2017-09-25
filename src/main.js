@@ -2,25 +2,12 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 
-// import Vue Material
-import 'vue-material/dist/vue-material.css'
-import VueMaterial from 'vue-material'
+// import Muse-UI
+import MuseUI from 'muse-ui'
+import 'muse-ui/dist/muse-ui.css'
+import 'muse-ui/dist/theme-light.css'
 
-Vue.use(VueMaterial)
-Vue.material.registerTheme({
-  default: {
-    primary: 'blue',
-    accent: 'red'
-  },
-  green: {
-    primary: 'green',
-    accent: 'pink'
-  },
-  orange: {
-    primary: 'orange',
-    accent: 'green'
-  }
-})
+Vue.use(MuseUI)
 
 // import HandyNote components
 import App from '@/App'

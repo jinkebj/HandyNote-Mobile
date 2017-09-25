@@ -1,28 +1,23 @@
 <template>
-  <md-list>
-    <md-list-item class="list-item-divider" v-for="listItem in listItems" :key="listItem._id">
-      <div class="has-ripple">
-        <md-ink-ripple />
+  <mu-list>
+    <mu-list-item class="list-item-divider" v-for="listItem in listItems" :key="listItem._id">
+      <div>
         <div class="list-item-name">{{listItem.name | truncate(35)}}</div>
         <div class="list-item-digest">{{listItem.digest | truncate(70)}}</div>
         <div class="list-item-info">{{listItem.updated_at | fmtDate}} {{listItem.folder_name}}</div>
       </div>
 
-      <md-button class="md-icon-button md-list-action">
-        <md-icon>more_vert</md-icon>
-      </md-button>
-    </md-list-item>
-  </md-list>
+      <mu-icon-menu slot="right" icon="more_vert">
+        <mu-menu-item title="Move To" />
+        <mu-menu-item title="Delete" />
+      </mu-icon-menu>
+    </mu-list-item>
+  </mu-list>
 </template>
 
 <style scoped>
-.has-ripple {
-  display: inline-block;
-  position: relative;
-}
-
 .list-item-name {
-  padding: 15px 0 10px 0;
+  padding: 0 0 10px 0;
   font-size: 16px;
   font-weight:bold;
 }
@@ -35,7 +30,7 @@
 .list-item-info {
   color: #8492A6;
   font-size: 12px;
-  padding: 10px 0 10px 0;
+  padding: 10px 0 0 0;
 }
 
 .list-item-divider {

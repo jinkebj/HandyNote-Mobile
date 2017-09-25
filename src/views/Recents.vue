@@ -3,11 +3,10 @@
     <my-header></my-header>
 
     <div class="page-content">
-      <my-note-widget></my-note-widget>
       <my-note-list></my-note-list>
     </div>
 
-    <my-footer class="page-footer"></my-footer>
+    <my-footer></my-footer>
   </div>
 </template>
 
@@ -23,23 +22,17 @@
   position: relative; /* need this to position inner content */
   overflow-y: auto;
 }
-
-.page-footer {
-  flex: 0 0 auto;
-}
 </style>
 
 <script>
 import MyHeader from '@/components/TopBar'
 import MyNoteList from '@/components/NoteList'
-import MyNoteWidget from '@/components/NoteWidget'
 import MyFooter from '@/components/BottomBar'
 
 export default {
   components: {
     MyHeader,
     MyNoteList,
-    MyNoteWidget,
     MyFooter
   }
 }

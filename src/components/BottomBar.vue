@@ -1,18 +1,12 @@
 <template>
-  <md-bottom-bar>
-    <md-bottom-bar-item md-icon="history" :md-active="isActive('/recents')" @click="$router.replace('/recents')">
-      Recents
-    </md-bottom-bar-item>
-    <md-bottom-bar-item md-icon="folder" :md-active="isActive('/folders')" @click="$router.replace('/folders')">
-      Folders
-    </md-bottom-bar-item>
-    <md-bottom-bar-item md-icon="favorite" :md-active="isActive('/favorites')" @click="$router.replace('/favorites')">
-      Favorites
-    </md-bottom-bar-item>
-    <md-bottom-bar-item md-icon="settings" :md-active="isActive('/settings')" @click="$router.replace('/settings')">
-      Settings
-    </md-bottom-bar-item>
-  </md-bottom-bar>
+  <mu-paper>
+    <mu-bottom-nav :value="$route.path" @change="handleChange">
+      <mu-bottom-nav-item value="/recents" title="Recents" icon="history"/>
+      <mu-bottom-nav-item value="/folders" title="Folders" icon="folder"/>
+      <mu-bottom-nav-item value="/favorites" title="Favorites" icon="favorite"/>
+      <mu-bottom-nav-item value="/settings" title="Settings" icon="settings"/>
+    </mu-bottom-nav>
+  </mu-paper>
 </template>
 
 <style scoped>
@@ -21,8 +15,8 @@
 <script>
 export default {
   methods: {
-    isActive (path) {
-      return this.$route.path === path
+    handleChange (val) {
+      this.$router.replace(val)
     }
   }
 }
