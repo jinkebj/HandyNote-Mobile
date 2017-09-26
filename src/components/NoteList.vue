@@ -3,7 +3,7 @@
     <mu-refresh-control :refreshing="refreshing" :trigger="trigger" @refresh="refresh"/>
     <mu-list>
       <mu-list-item class="list-item-divider" v-for="listItem in listItems" :key="listItem._id">
-        <div>
+        <div @click="$router.push('/notes/' + listItem._id)">
           <div class="list-item-name">{{listItem.name | truncate(35)}}</div>
           <div class="list-item-digest">{{listItem.digest | truncate(70)}}</div>
           <div class="list-item-info">{{listItem.updated_at | fmtDate}} {{listItem.folder_name}}</div>
