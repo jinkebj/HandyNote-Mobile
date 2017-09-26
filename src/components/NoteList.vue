@@ -11,10 +11,15 @@
 
         <mu-icon-menu slot="right" icon="more_vert">
           <mu-menu-item title="Move To" />
-          <mu-menu-item title="Delete" />
+          <mu-menu-item title="Delete" @click="selectNote(listItem._id)" />
         </mu-icon-menu>
       </mu-list-item>
     </mu-list>
+    <mu-dialog :open="showDeleteConfirm" title="Please Confirm">
+      Move this note to trash?
+      <mu-flat-button slot="actions" @click="showDeleteConfirm=false" primary label="No"/>
+      <mu-flat-button slot="actions" primary @click="deleteNote" label="Yes"/>
+    </mu-dialog>
   </div>
 </template>
 
@@ -47,6 +52,8 @@ import Model from '@/models'
 export default {
   data () {
     return {
+      showDeleteConfirm: false,
+      selectedNoteId: '',
       refreshing: false,
       trigger: null,
       listItems: []
@@ -64,6 +71,23 @@ export default {
       Model.getNoteList(params)
         .then(function (response) {
           self.listItems = response.data
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    selectNote (id) {
+      this.showDeleteConfirm = true
+      this.selectedNoteId = id
+    },
+
+    deleteNote () {
+      const self = this
+      Model.deleteNote(self.selectedNoteId)
+        .then(function (response) {
+          self.showDeleteConfirm = false
+          self.refresh()
         })
         .catch(function (error) {
           console.log(error)

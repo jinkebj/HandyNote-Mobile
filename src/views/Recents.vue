@@ -3,6 +3,7 @@
     <my-header></my-header>
 
     <div class="page-content">
+      <my-note-widget></my-note-widget>
       <my-note-list></my-note-list>
     </div>
 
@@ -26,12 +27,14 @@
 
 <script>
 import MyHeader from '@/components/TopBar'
+import MyNoteWidget from '@/components/NoteWidget'
 import MyNoteList from '@/components/NoteList'
 import MyFooter from '@/components/BottomBar'
 
 export default {
   components: {
     MyHeader,
+    MyNoteWidget,
     MyNoteList,
     MyFooter
   }

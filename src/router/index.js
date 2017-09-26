@@ -5,7 +5,8 @@ import Recents from '@/views/Recents'
 import Folders from '@/views/Folders'
 import Favorites from '@/views/Favorites'
 import Settings from '@/views/Settings'
-import NotePage from '@/views/NotePage'
+
+import NoteDetail from '@/components/NoteDetail'
 
 Vue.use(Router)
 
@@ -33,7 +34,7 @@ export default new Router({
     },
     {
       path: '/notes/:id',
-      component: NotePage
+      component: NoteDetail
     },
     {
       path: '*',
