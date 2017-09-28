@@ -11,7 +11,7 @@
     </mu-appbar>
 
     <div class="page-content">
-      <input type="text" class="note-item-name" :readonly="!editMode" v-model="noteItem.name">
+      <mu-text-field class="note-item-name" multiLine :underlineShow="false" :disabled="!editMode" v-model="noteItem.name"/>
 
       <mu-float-button icon="edit" secondary class="note-float-button" v-show="!editMode" @click="toggleeditMode" />
 
@@ -23,6 +23,23 @@
 
         <select class="ql-color"></select>
         <select class="ql-background"></select>
+
+        <select class="ql-header">
+          <option value="1"></option>
+          <option value="2"></option>
+          <option value="3"></option>
+          <option value="4"></option>
+          <option value="5"></option>
+          <option value="6"></option>
+          <option selected></option>
+        </select>
+        <select class="ql-size">
+          <option value="small"></option>
+          <option selected></option>
+          <option value="large"></option>
+          <option value="huge"></option>
+        </select>
+
         <select class="ql-align"></select>
         <button class="ql-indent" value="-1"></button>
         <button class="ql-indent" value="+1"></button>
@@ -32,6 +49,7 @@
         <button class="ql-blockquote"></button>
         <button class="ql-code-block"></button>
         <button class="ql-clean"></button>
+        <button class="ql-link"></button>
         <button class="ql-image"></button>
       </div>
 
@@ -61,6 +79,7 @@
 }
 
 .page-content {
+  background: #F5F5F5;
   flex: 1 1 auto;
   position: relative; /* need this to position inner content */
   overflow-y: auto;
@@ -70,10 +89,12 @@
   border: none;
   outline: none;
   width: 100vw;
-  padding: 10px 15px;
+  padding: 0 15px;
+  margin: 0;
   background: #F5F5F5;
   color: #475669;
   font-size: 18px;
+  font-weight: bold;
 }
 
 .note-float-button {
@@ -91,8 +112,15 @@
 }
 
 #note-editor {
+  background: #FFFFFF;
   border: 0;
   font-size: 16px;
+}
+</style>
+
+<style>
+.page-content .mu-text-field-content {
+  padding: 15px 0 0 0;
 }
 </style>
 

@@ -5,7 +5,6 @@
     <div class="page-content">
       <my-note-widget></my-note-widget>
       <div>
-        Favorites
       </div>
     </div>
 

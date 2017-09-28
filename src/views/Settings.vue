@@ -3,10 +3,12 @@
     <my-header></my-header>
 
     <div class="page-content">
-      <div>
-        {{loginUser}}
-        <mu-raised-button label="Logout" primary @click="logout" />
-      </div>
+      <mu-list-item disabled class="login-info">
+        <div slot="title" class="login-user">{{loginUser}}</div>
+        <mu-avatar slot="left" icon="person" />
+      </mu-list-item>
+
+      <mu-raised-button label="Logout" primary @click="logout" />
     </div>
 
     <my-footer></my-footer>
@@ -21,9 +23,21 @@
 }
 
 .page-content {
+  background: #F5F5F5;
   flex: 1 1 auto;
-  position: relative; /* need this to position inner content */
-  overflow-y: auto;
+  padding: 30px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.login-info {
+  padding-bottom: 30px;
+}
+
+.login-user {
+  font-size: 18px;
+  color: #324057;
 }
 </style>
 
