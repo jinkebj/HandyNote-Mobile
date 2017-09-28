@@ -2,20 +2,20 @@
   <div class="page">
     <mu-appbar :title="noteItem.name">
       <mu-icon-button icon="arrow_back" slot="left" @click="$router.back()" />
-      <mu-icon-button icon="clear" slot="right" v-show="canEdit" @click="togglecanEdit" />
-      <mu-icon-button icon="done" slot="right" v-show="canEdit" @click="updateNote" />
+      <mu-icon-button icon="clear" slot="right" v-show="editMode" @click="preCancelUpdate" />
+      <mu-icon-button icon="done" slot="right" v-show="editMode" @click="updateNote" />
       <mu-icon-menu slot="right" icon="more_vert">
-        <mu-menu-item title="Move To" />
-        <mu-menu-item title="Delete" @click="showDeleteConfirm=true"/>
+        <mu-menu-item title="Move To" v-show="!editMode" />
+        <mu-menu-item title="Delete" @click="showDeleteConfirm=true" />
       </mu-icon-menu>
     </mu-appbar>
 
     <div class="page-content">
-      <input type="text" class="note-item-name" :readonly="!canEdit" v-model="noteItem.name">
+      <input type="text" class="note-item-name" :readonly="!editMode" v-model="noteItem.name">
 
-      <mu-float-button icon="edit" secondary class="note-float-button" v-show="!canEdit" @click="togglecanEdit" />
+      <mu-float-button icon="edit" secondary class="note-float-button" v-show="!editMode" @click="toggleeditMode" />
 
-      <div id="note-toolbar" v-show="canEdit">
+      <div id="note-toolbar" v-show="editMode">
         <button class="ql-bold"></button>
         <button class="ql-italic"></button>
         <button class="ql-underline"></button>
@@ -42,6 +42,12 @@
       Move this note to trash?
       <mu-flat-button slot="actions" @click="showDeleteConfirm=false" primary label="No"/>
       <mu-flat-button slot="actions" primary @click="deleteNote" label="Yes"/>
+    </mu-dialog>
+
+    <mu-dialog :open="showCancelConfirm" title="Please Confirm">
+      Discard current change?
+      <mu-flat-button slot="actions" @click="showCancelConfirm=false" primary label="No"/>
+      <mu-flat-button slot="actions" primary @click="cancelUpdateNote" label="Yes"/>
     </mu-dialog>
   </div>
 
@@ -83,6 +89,11 @@
   top: 0px;
   z-index: 999;
 }
+
+#note-editor {
+  border: 0;
+  font-size: 16px;
+}
 </style>
 
 <script>
@@ -94,9 +105,11 @@ export default {
   data () {
     return {
       showDeleteConfirm: false,
-      canEdit: false,
+      showCancelConfirm: false,
+      editMode: false,
       quill: {},
-      noteItem: {name: ''}
+      noteItem: {name: ''},
+      originNoteName: ''
     }
   },
 
@@ -117,8 +130,15 @@ export default {
       const self = this
       Model.getNote(self.$route.params.id)
         .then(function (response) {
+          self.originNoteName = response.data.name
           self.noteItem = response.data
           self.quill.setContents(response.data.contents)
+
+          // go to edit mode if the note is newly created
+          if (response.data.contents.length === 0 && response.data.deleted === 0) {
+            self.editMode = true
+            self.quill.enable(self.editMode)
+          }
         })
         .catch(function (error) {
           console.log(error)
@@ -134,11 +154,28 @@ export default {
       })
         .then(function (response) {
           self.noteItem = response.data
-          self.togglecanEdit()
+          self.toggleeditMode()
         })
         .catch(function (error) {
           console.log(error)
         })
+    },
+
+    preCancelUpdate () {
+      if (this.originNoteName !== this.noteItem.name ||
+        JSON.stringify(this.quill.getContents().ops) !== JSON.stringify(this.noteItem.contents)) {
+        this.showCancelConfirm = true
+      } else {
+        this.toggleeditMode()
+      }
+    },
+
+    cancelUpdateNote () {
+      const self = this
+      self.showCancelConfirm = false
+      self.noteItem.name = self.originNoteName
+      self.quill.setContents(self.noteItem.contents)
+      self.toggleeditMode()
     },
 
     deleteNote () {
@@ -153,9 +190,9 @@ export default {
         })
     },
 
-    togglecanEdit () {
-      this.canEdit = !this.canEdit
-      this.quill.enable(this.canEdit)
+    toggleeditMode () {
+      this.editMode = !this.editMode
+      this.quill.enable(this.editMode)
     }
   }
 }

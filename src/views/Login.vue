@@ -1,7 +1,6 @@
 <template>
   <div>
     <mu-appbar title="Handy Note">
-      <mu-icon-button icon="menu" slot="left" />
     </mu-appbar>
 
     <div class="login-box">

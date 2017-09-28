@@ -1,8 +1,7 @@
 <template>
-  <mu-appbar>
-    <mu-icon-button icon="menu" slot="left"/>
+  <mu-appbar title="Handy Note">
     <mu-icon-button icon="search" slot="right"/>
-    <mu-icon-button icon="view_module" slot="right"/>
+    <mu-icon-button icon="sync" slot="right"/>
   </mu-appbar>
 </template>
 
