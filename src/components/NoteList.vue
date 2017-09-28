@@ -1,6 +1,7 @@
 <template>
   <div>
     <mu-refresh-control :refreshing="refreshing" :trigger="trigger" @refresh="refresh"/>
+
     <mu-list>
       <mu-list-item class="list-item-divider" v-for="listItem in listItems" :key="listItem._id">
         <div @click="$router.push('/notes/' + listItem._id)">
@@ -15,6 +16,9 @@
         </mu-icon-menu>
       </mu-list-item>
     </mu-list>
+
+    <mu-circular-progress class="loading-indicator" :size="40" v-show="loadingFlag" />
+
     <mu-dialog :open="showDeleteConfirm" title="Please Confirm">
       Move this note to trash?
       <mu-flat-button slot="actions" @click="showDeleteConfirm=false" primary label="No"/>
@@ -24,6 +28,12 @@
 </template>
 
 <style scoped>
+.loading-indicator {
+  position: fixed;
+  top: calc(100vh / 2 - 20px);
+  left: calc(100vw / 2 - 20px);
+}
+
 .list-item-name {
   padding: 0 0 10px 0;
   font-size: 16px;
@@ -52,6 +62,7 @@ import Model from '@/models'
 export default {
   data () {
     return {
+      loadingFlag: true,
       showDeleteConfirm: false,
       selectedNoteId: '',
       refreshing: false,
@@ -71,6 +82,7 @@ export default {
       Model.getNoteList(params)
         .then(function (response) {
           self.listItems = response.data
+          self.loadingFlag = false
         })
         .catch(function (error) {
           console.log(error)

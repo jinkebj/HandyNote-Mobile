@@ -56,6 +56,8 @@
       <div id="note-editor"></div>
     </div>
 
+    <mu-circular-progress class="loading-indicator" :size="40" v-show="loadingFlag" />
+
     <mu-dialog :open="showDeleteConfirm" title="Please Confirm">
       Move this note to trash?
       <mu-flat-button slot="actions" @click="showDeleteConfirm=false" primary label="No"/>
@@ -72,6 +74,12 @@
 </template>
 
 <style scoped>
+.loading-indicator {
+  position: fixed;
+  top: calc(100vh / 2 - 20px);
+  left: calc(100vw / 2 - 20px);
+}
+
 .page {
   height: 100vh;
   display: flex;
@@ -115,6 +123,7 @@
   background: #FFFFFF;
   border: 0;
   font-size: 16px;
+  min-height: 200px;
 }
 </style>
 
@@ -132,6 +141,7 @@ import Quill from 'quill'
 export default {
   data () {
     return {
+      loadingFlag: true,
       showDeleteConfirm: false,
       showCancelConfirm: false,
       editMode: false,
@@ -158,6 +168,7 @@ export default {
       const self = this
       Model.getNote(self.$route.params.id)
         .then(function (response) {
+          self.loadingFlag = false
           self.originNoteName = response.data.name
           self.noteItem = response.data
           self.quill.setContents(response.data.contents)
@@ -166,6 +177,7 @@ export default {
           if (response.data.contents.length === 0 && response.data.deleted === 0) {
             self.editMode = true
             self.quill.enable(self.editMode)
+            self.quill.focus()
           }
         })
         .catch(function (error) {
@@ -175,12 +187,14 @@ export default {
 
     updateNote () {
       const self = this
+      self.loadingFlag = true
       Model.updateNote(self.$route.params.id, {
         name: this.noteItem.name,
         text: this.quill.getText(),
         contents: this.quill.getContents().ops
       })
         .then(function (response) {
+          self.loadingFlag = false
           self.noteItem = response.data
           self.toggleeditMode()
         })
