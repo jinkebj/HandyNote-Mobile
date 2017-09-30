@@ -99,8 +99,6 @@
   width: 100vw;
   padding: 0 15px;
   margin: 0;
-  background: #F5F5F5;
-  color: #475669;
   font-size: 18px;
   font-weight: bold;
 }
