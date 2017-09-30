@@ -123,7 +123,7 @@
   background: #FFFFFF;
   border: 0;
   font-size: 16px;
-  min-height: 200px;
+  min-height: calc(100vh - 110px);;
 }
 </style>
 
@@ -174,10 +174,8 @@ export default {
           self.quill.setContents(response.data.contents)
 
           // go to edit mode if the note is newly created
-          if (response.data.contents.length === 0 && response.data.deleted === 0) {
-            self.editMode = true
-            self.quill.enable(self.editMode)
-            self.quill.focus()
+          if (self.editMode === false && response.data.contents.length === 0 && response.data.deleted === 0) {
+            self.toggleeditMode()
           }
         })
         .catch(function (error) {
@@ -235,6 +233,7 @@ export default {
     toggleeditMode () {
       this.editMode = !this.editMode
       this.quill.enable(this.editMode)
+      if (this.editMode === true) this.quill.focus()
     }
   }
 }
