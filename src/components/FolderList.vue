@@ -9,13 +9,17 @@
         <mu-icon slot="left" value="delete"/>
         <div slot="title" class="note-top-folder" @click="$router.push('/folders/' + trashFolderId)">Trash</div>
         <mu-icon-menu slot="after" icon="more_vert">
-          <mu-menu-item title="Empty Trash" />
-          <mu-menu-item title="Restore All" />
+          <mu-menu-item title="Empty Trash" @click="emptyTrash" />
+          <mu-menu-item title="Restore All" @click="revertTrash" />
         </mu-icon-menu>
       </mu-list-item>
     </mu-list>
 
     <mu-circular-progress class="loading-indicator" :size="40" v-show="loadingFlag" />
+
+    <mu-popup position="top" :overlay="false" popupClass="popup-top" :open="emptyTrashPopup">
+      Empty trash successfully!
+    </mu-popup>
   </div>
 </template>
 
@@ -28,6 +32,17 @@
 
 .note-folder-container .mu-item.show-left {
   padding-left: 50px;
+}
+
+.popup-top {
+  font-size: 16px;
+  width: 100vw;
+  color: #FFFFFF;
+  background: #2196F3;
+  height: 56px;
+  line-height: 56px;
+  display: flex;
+  justify-content: center;
 }
 </style>
 
@@ -71,7 +86,18 @@ export default {
         }
       ],
       refreshing: false,
-      trigger: null
+      trigger: null,
+      emptyTrashPopup: false
+    }
+  },
+
+  watch: {
+    emptyTrashPopup (val) {
+      if (val) {
+        setTimeout(() => {
+          this.emptyTrashPopup = false
+        }, 2000)
+      }
     }
   },
 
@@ -100,6 +126,28 @@ export default {
         this.loadFolderList()
         this.refreshing = false
       }, 1000)
+    },
+
+    emptyTrash () {
+      const self = this
+      Model.emptyTrash()
+        .then(function (response) {
+          self.emptyTrashPopup = true
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    revertTrash () {
+      const self = this
+      Model.revertTrash()
+        .then(function (response) {
+          self.loadFolderList()
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   }
 }
