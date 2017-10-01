@@ -3,11 +3,11 @@
     <mu-refresh-control :refreshing="refreshing" :trigger="trigger" @refresh="refresh"/>
 
     <mu-list class="note-folder-container">
-      <folder-item :noteFolder="noteFolders[0]"></folder-item>
+      <folder-item :noteFolder="noteFolders[0]" @deleteFolder="loadFolderList"></folder-item>
 
       <mu-list-item>
         <mu-icon slot="left" value="delete"/>
-        <div slot="title" class="note-top-folder" @click="$router.push('/folders/' + trashFolderId)">Trash (5)</div>
+        <div slot="title" class="note-top-folder" @click="$router.push('/folders/' + trashFolderId)">Trash</div>
         <mu-icon-menu slot="after" icon="more_vert">
           <mu-menu-item title="Empty Trash" />
           <mu-menu-item title="Restore All" />

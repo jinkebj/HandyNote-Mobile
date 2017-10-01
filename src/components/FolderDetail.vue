@@ -2,12 +2,7 @@
   <div class="page">
     <mu-appbar :title="folderTitle">
       <mu-icon-button icon="arrow_back" slot="left" @click="$router.back()" />
-      <mu-icon-button icon="add" slot="right" />
-      <mu-icon-menu slot="right" icon="more_vert">
-        <mu-menu-item title="Rename Folder" />
-        <mu-menu-item title="Move Folder" />
-        <mu-menu-item title="Delete Folder" />
-      </mu-icon-menu>
+      <mu-icon-button icon="add" slot="right" v-show="$route.params.id!==trashFolderId" />
     </mu-appbar>
 
     <div class="page-content">

@@ -11,13 +11,19 @@
         <mu-menu-item title="New Sub Folder" />
         <mu-menu-item title="Rename" v-show="noteFolder.type !== 0" />
         <mu-menu-item title="Move To" v-show="noteFolder.type !== 0" />
-        <mu-menu-item title="Delete" v-show="noteFolder.type !== 0" />
+        <mu-menu-item title="Delete" v-show="noteFolder.type !== 0" @click="selectFolder(noteFolder.id)" />
       </mu-icon-menu>
     </div>
 
     <div class="folder-sub" v-for="noteFolder in noteFolder.children" :key="noteFolder.id" v-if="haveSubFolder">
-      <folder-item :noteFolder="noteFolder"></folder-item>
+      <folder-item :noteFolder="noteFolder" @deleteFolder="$emit('deleteFolder')"></folder-item>
     </div>
+
+    <mu-dialog :open="showDeleteConfirm" title="Please Confirm">
+      All notes and subfolder under this folder will be moved to trash, continue?
+      <mu-flat-button slot="actions" @click="showDeleteConfirm=false" primary label="No"/>
+      <mu-flat-button slot="actions" primary @click="deleteFolder" label="Yes"/>
+    </mu-dialog>
   </div>
 </template>
 
@@ -68,6 +74,8 @@
 </style>
 
 <script>
+import Model from '@/models'
+
 export default {
   name: 'folderItem',
 
@@ -77,6 +85,8 @@ export default {
 
   data () {
     return {
+      showDeleteConfirm: false,
+      selectedFolderId: ''
     }
   },
 
@@ -100,6 +110,22 @@ export default {
   },
 
   methods: {
+    selectFolder (id) {
+      this.showDeleteConfirm = true
+      this.selectedFolderId = id
+    },
+
+    deleteFolder () {
+      const self = this
+      Model.deleteFolder(self.selectedFolderId)
+        .then(function (response) {
+          self.showDeleteConfirm = false
+          self.$emit('deleteFolder')
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    }
   }
 }
 </script>
