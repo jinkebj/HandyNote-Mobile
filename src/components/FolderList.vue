@@ -3,7 +3,7 @@
     <mu-refresh-control :refreshing="refreshing" :trigger="trigger" @refresh="refresh"/>
 
     <mu-list class="note-folder-container">
-      <folder-item :noteFolder="noteFolders[0]" @deleteFolder="loadFolderList"></folder-item>
+      <folder-item :noteFolder="noteFolders[0]" @refreshFolderList="loadFolderList"></folder-item>
 
       <mu-list-item>
         <mu-icon slot="left" value="delete"/>
