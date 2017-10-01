@@ -7,7 +7,7 @@
 
       <mu-list-item>
         <mu-icon slot="left" value="delete"/>
-        <div slot="title" class="note-top-folder" @click="$router.push('/folders/' + trashFolderId)">Trash</div>
+        <div slot="title" class="note-top-folder" @click="$router.push('/trash')">Trash</div>
         <mu-icon-menu slot="after" icon="more_vert">
           <mu-menu-item title="Empty Trash" @click="emptyTrash" />
           <mu-menu-item title="Restore All" @click="revertTrash" />

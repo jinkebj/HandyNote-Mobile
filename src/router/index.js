@@ -8,6 +8,7 @@ import Settings from '@/views/Settings'
 
 import NoteDetail from '@/components/NoteDetail'
 import FolderDetail from '@/components/FolderDetail'
+import TrashList from '@/components/TrashList'
 
 Vue.use(Router)
 
@@ -40,6 +41,10 @@ export default new Router({
     {
       path: '/notes/:id',
       component: NoteDetail
+    },
+    {
+      path: '/trash',
+      component: TrashList
     },
     {
       path: '*',

@@ -2,7 +2,7 @@
   <div class="page">
     <mu-appbar :title="folderTitle">
       <mu-icon-button icon="arrow_back" slot="left" @click="$router.back()" />
-      <mu-icon-button icon="add" slot="right" v-show="$route.params.id!==trashFolderId" />
+      <mu-icon-button icon="add" slot="right" />
     </mu-appbar>
 
     <div class="page-content">
@@ -28,7 +28,7 @@
 
 <script>
 import Model from '@/models'
-import {getCurUsrRootFolderId, getCurUsrTrashFolderId} from '@/util'
+import {getCurUsrRootFolderId} from '@/util'
 import MyNoteList from '@/components/NoteList'
 
 export default {
@@ -39,7 +39,6 @@ export default {
   data () {
     return {
       rootFolderId: getCurUsrRootFolderId(),
-      trashFolderId: getCurUsrTrashFolderId(),
       folderItem: {name: ''}
     }
   },
@@ -47,9 +46,7 @@ export default {
   computed: {
     folderTitle () {
       let title = ''
-      if (this.$route.params.id === this.trashFolderId) {
-        title = 'Trash'
-      } else if (this.$route.params.id === this.rootFolderId) {
+      if (this.$route.params.id === this.rootFolderId) {
         title = 'My Folders'
       } else {
         title = 'Folder: ' + this.folderItem.name
