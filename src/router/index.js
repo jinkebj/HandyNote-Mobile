@@ -7,6 +7,7 @@ import Favorites from '@/views/Favorites'
 import Settings from '@/views/Settings'
 
 import NoteDetail from '@/components/NoteDetail'
+import FolderDetail from '@/components/FolderDetail'
 
 Vue.use(Router)
 
@@ -19,6 +20,10 @@ export default new Router({
     {
       path: '/recents',
       component: Recents
+    },
+    {
+      path: '/folders/:id',
+      component: FolderDetail
     },
     {
       path: '/folders',

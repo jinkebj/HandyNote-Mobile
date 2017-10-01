@@ -58,12 +58,18 @@
 
 <script>
 import Model from '@/models'
+import {getCurUsrTrashFolderId} from '@/util'
 
 export default {
+  props: {
+    folderId: String
+  },
+
   data () {
     return {
       loadingFlag: true,
       showDeleteConfirm: false,
+      trashFolderId: getCurUsrTrashFolderId(),
       selectedNoteId: '',
       refreshing: false,
       trigger: null,
@@ -77,16 +83,31 @@ export default {
   },
 
   methods: {
-    loadNoteList (params) {
+    loadNoteList () {
       const self = this
-      Model.getNoteList(params)
-        .then(function (response) {
-          self.listItems = response.data
-          self.loadingFlag = false
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
+      self.loadingFlag = true
+
+      if (self.folderId === self.trashFolderId) {
+        Model.getTrash()
+          .then(function (response) {
+            self.listItems = response.data
+            self.loadingFlag = false
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      } else {
+        let params = {}
+        params.folder_id = self.folderId
+        Model.getNoteList(params)
+          .then(function (response) {
+            self.listItems = response.data
+            self.loadingFlag = false
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
     },
 
     selectNote (id) {

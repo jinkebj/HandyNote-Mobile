@@ -3,7 +3,8 @@
     <div class="folder-current">
       <div :style="{width: folderGap + 'px' }"></div>
       <mu-icon value="folder" class="folder-icon" v-show="noteFolder.type === 0" />
-      <div :class="noteFolder.type === 0 ? 'folder-title-top' : 'folder-title'" @click="$router.replace('/recents')">
+      <div :class="noteFolder.type === 0 ? 'folder-title-top' : 'folder-title'"
+        @click="$router.push('/folders/' + noteFolder.id)">
         {{noteFolder.label}} (888)
       </div>
       <mu-icon-menu icon="more_vert">
@@ -74,7 +75,7 @@ export default {
     noteFolder: Object
   },
 
-  data: function () {
+  data () {
     return {
     }
   },
@@ -91,8 +92,6 @@ export default {
   },
 
   methods: {
-    toggle: function () {
-    }
   }
 }
 </script>

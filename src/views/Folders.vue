@@ -28,7 +28,7 @@
 <script>
 import MyHeader from '@/components/TopBar'
 import MyNoteWidget from '@/components/NoteWidget'
-import MyNoteFolder from '@/components/NoteFolder'
+import MyNoteFolder from '@/components/FolderList'
 import MyFooter from '@/components/BottomBar'
 
 export default {
