@@ -40,6 +40,10 @@ Model.addFolder = (params) => {
   return http.post(BaseAPIUrl + '/folders/', params)
 }
 
+Model.getFolder = (id) => {
+  return http.get(BaseAPIUrl + '/folders/' + id)
+}
+
 Model.updateFolder = (id, params) => {
   return http.post(BaseAPIUrl + '/folders/' + id, params)
 }

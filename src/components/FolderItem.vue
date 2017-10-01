@@ -81,12 +81,12 @@ export default {
   },
 
   computed: {
-    haveSubFolder: function () {
+    haveSubFolder () {
       return this.noteFolder.children &&
         this.noteFolder.children.length
     },
 
-    folderGap: function () {
+    folderGap () {
       return 20 * (this.noteFolder.ancestor_ids.length + 1)
     }
   },

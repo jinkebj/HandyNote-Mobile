@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <mu-appbar title="Folder">
+    <mu-appbar :title="folderTitle">
       <mu-icon-button icon="arrow_back" slot="left" @click="$router.back()" />
       <mu-icon-button icon="add" slot="right" />
       <mu-icon-menu slot="right" icon="more_vert">
@@ -25,7 +25,6 @@
 }
 
 .page-content {
-  background: #F5F5F5;
   flex: 1 1 auto;
   position: relative; /* need this to position inner content */
   overflow-y: auto;
@@ -33,6 +32,8 @@
 </style>
 
 <script>
+import Model from '@/models'
+import {getCurUsrRootFolderId, getCurUsrTrashFolderId} from '@/util'
 import MyNoteList from '@/components/NoteList'
 
 export default {
@@ -42,10 +43,41 @@ export default {
 
   data () {
     return {
+      rootFolderId: getCurUsrRootFolderId(),
+      trashFolderId: getCurUsrTrashFolderId(),
+      folderItem: {name: ''}
     }
   },
 
+  computed: {
+    folderTitle () {
+      let title = ''
+      if (this.$route.params.id === this.trashFolderId) {
+        title = 'Trash'
+      } else if (this.$route.params.id === this.rootFolderId) {
+        title = 'My Folders'
+      } else {
+        title = 'Folder: ' + this.folderItem.name
+      }
+      return title
+    }
+  },
+
+  mounted () {
+    this.loadFolderInfo()
+  },
+
   methods: {
+    loadFolderInfo () {
+      const self = this
+      Model.getFolder(self.$route.params.id)
+        .then(function (response) {
+          self.folderItem = response.data
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    }
   }
 }
 </script>
