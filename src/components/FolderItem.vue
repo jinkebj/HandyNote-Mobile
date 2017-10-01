@@ -5,7 +5,7 @@
       <mu-icon value="folder" class="folder-icon" v-show="noteFolder.type === 0" />
       <div :class="noteFolder.type === 0 ? 'folder-title-top' : 'folder-title'"
         @click="$router.push('/folders/' + noteFolder.id)">
-        {{noteFolder.label}} (888)
+        {{noteFolder.label}} ({{getFolderStatisticsInfo}})
       </div>
       <mu-icon-menu icon="more_vert">
         <mu-menu-item title="New Sub Folder" />
@@ -88,6 +88,14 @@ export default {
 
     folderGap () {
       return 20 * (this.noteFolder.ancestor_ids.length + 1)
+    },
+
+    getFolderStatisticsInfo () {
+      if (this.noteFolder.note_count_cur === this.noteFolder.note_count_all) {
+        return this.noteFolder.note_count_cur
+      } else {
+        return this.noteFolder.note_count_cur + '/' + this.noteFolder.note_count_all
+      }
     }
   },
 

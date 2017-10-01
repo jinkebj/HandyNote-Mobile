@@ -47,7 +47,7 @@
 
 <script>
 import Model from '@/models'
-import {prepareFolderData, getCurUsrRootFolderId, getCurUsrTrashFolderId} from '@/util'
+import {getCurUsrRootFolderId, getCurUsrRootFolderName, getCurUsrTrashFolderId} from '@/util'
 import FolderItem from '@/components/FolderItem'
 
 export default {
@@ -58,15 +58,16 @@ export default {
   data () {
     return {
       loadingFlag: true,
-      rootFolderId: getCurUsrRootFolderId(),
       trashFolderId: getCurUsrTrashFolderId(),
       noteFolders: [
         {
           type: 0,
           id: getCurUsrRootFolderId(),
-          label: 'My Folders',
+          label: getCurUsrRootFolderName(),
           ancestor_ids: [],
-          children: []
+          children: [],
+          note_count_cur: 0, // count of notes under current folder
+          note_count_all: 0 // count of notes under current folder and all sub folders
         }
       ],
       refreshing: false,
@@ -83,9 +84,9 @@ export default {
     loadFolderList () {
       const self = this
       self.loadingFlag = true
-      Model.getFolderList()
+      Model.getFolderTreeData()
         .then(function (response) {
-          self.noteFolders = prepareFolderData(self.noteFolders[0], response.data)
+          self.noteFolders = response.data
           self.loadingFlag = false
         })
         .catch(function (error) {
