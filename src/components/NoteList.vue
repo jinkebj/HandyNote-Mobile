@@ -58,6 +58,7 @@
 </style>
 
 <script>
+import {getCurUsrStarFolderId} from '@/util'
 import Model from '@/models'
 
 export default {
@@ -87,7 +88,11 @@ export default {
       self.loadingFlag = true
 
       let params = {}
-      params.folder_id = self.folderId
+      if (self.folderId === getCurUsrStarFolderId()) {
+        params.starred = 1
+      } else {
+        params.folder_id = self.folderId
+      }
       Model.getNoteList(params)
         .then(function (response) {
           self.listItems = response.data

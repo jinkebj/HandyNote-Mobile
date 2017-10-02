@@ -2,6 +2,8 @@
   <div class="page">
     <mu-appbar :title="noteItem.name">
       <mu-icon-button icon="arrow_back" slot="left" @click="$router.back()" />
+      <mu-icon-button :icon="noteItem.starred === 1 ? 'star' : 'star_border'" slot="right"
+        v-show="!loadingFlag" @click="toggleNoteStar" />
       <mu-icon-button icon="clear" slot="right" v-show="editMode" @click="preCancelUpdate" />
       <mu-icon-button icon="done" slot="right" v-show="editMode" @click="updateNote" />
       <mu-icon-menu slot="right" icon="more_vert">
@@ -212,6 +214,20 @@ export default {
           self.loadingFlag = false
           self.noteItem = response.data
           self.toggleeditMode()
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    toggleNoteStar () {
+      const self = this
+      let starValue = (self.noteItem.starred === 1 ? 0 : 1)
+      Model.updateNote(self.id, {
+        starred: starValue
+      })
+        .then(function (response) {
+          self.noteItem.starred = starValue
         })
         .catch(function (error) {
           console.log(error)

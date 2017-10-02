@@ -4,8 +4,7 @@
 
     <div class="page-content">
       <my-note-widget></my-note-widget>
-      <div>
-      </div>
+      <my-note-list :folderId="starFolderId"></my-note-list>
     </div>
 
     <my-footer></my-footer>
@@ -27,15 +26,24 @@
 </style>
 
 <script>
+import {getCurUsrStarFolderId} from '@/util'
 import MyHeader from '@/components/TopBar'
 import MyNoteWidget from '@/components/AddNoteWidget'
+import MyNoteList from '@/components/NoteList'
 import MyFooter from '@/components/BottomBar'
 
 export default {
   components: {
     MyHeader,
     MyNoteWidget,
+    MyNoteList,
     MyFooter
+  },
+
+  data () {
+    return {
+      starFolderId: getCurUsrStarFolderId()
+    }
   }
 }
 </script>
