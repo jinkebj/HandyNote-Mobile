@@ -2,10 +2,10 @@
   <div class="page">
     <mu-appbar :title="folderTitle">
       <mu-icon-button icon="arrow_back" slot="left" @click="$router.back()" />
-      <mu-icon-button icon="add" slot="right" />
     </mu-appbar>
 
     <div class="page-content">
+      <my-note-widget :folderId="id" :bottom=true></my-note-widget>
       <my-note-list :folderId="id"></my-note-list>
     </div>
   </div>
@@ -29,12 +29,14 @@
 <script>
 import Model from '@/models'
 import {getCurUsrRootFolderId} from '@/util'
+import MyNoteWidget from '@/components/AddNoteWidget'
 import MyNoteList from '@/components/NoteList'
 
 export default {
   props: ['id'],
 
   components: {
+    MyNoteWidget,
     MyNoteList
   },
 
