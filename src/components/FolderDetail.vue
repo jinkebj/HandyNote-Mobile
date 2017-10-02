@@ -2,6 +2,7 @@
   <div class="page">
     <mu-appbar :title="folderTitle">
       <mu-icon-button icon="arrow_back" slot="left" @click="$router.back()" />
+      <mu-icon slot="left" value="folder_open"/>
     </mu-appbar>
 
     <div class="page-content">
@@ -53,7 +54,7 @@ export default {
       if (this.id === this.rootFolderId) {
         title = 'My Folders'
       } else {
-        title = 'Folder: ' + this.folderItem.name
+        title = this.folderItem.name
       }
       return title
     }

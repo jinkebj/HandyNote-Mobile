@@ -14,7 +14,7 @@
     <div class="page-content">
       <mu-text-field class="note-item-name" multiLine :underlineShow="false" :disabled="!editMode" v-model="noteItem.name"/>
       <div class="note-folder-info">
-        <mu-icon value="folder_open" color="blue"/>
+        <mu-icon value="folder_open" color="blue" v-show="!loadingFlag" />
         <div class="note-folder-info-text">{{noteItem.folder_name}}</div>
       </div>
 

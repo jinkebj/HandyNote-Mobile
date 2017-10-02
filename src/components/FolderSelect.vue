@@ -2,8 +2,8 @@
   <div class="page">
     <mu-appbar title="Select Folder">
       <mu-icon-button icon="arrow_back" slot="left" @click="$router.back()" />
-      <mu-flat-button label="Cancel" slot="right" @click="$router.back()" />
-      <mu-flat-button label="Move" slot="right" :disabled="selectedFolderId===''" @click="moveItem" />
+      <mu-icon-button icon="clear" slot="right" @click="$router.back()" />
+      <mu-icon-button icon="done" slot="right" :disabled="selectedFolderId===''" @click="moveItem" />
     </mu-appbar>
 
     <div class="page-content">
