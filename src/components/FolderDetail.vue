@@ -6,7 +6,7 @@
     </mu-appbar>
 
     <div class="page-content">
-      <my-note-list :folderId="$route.params.id"></my-note-list>
+      <my-note-list :folderId="id"></my-note-list>
     </div>
   </div>
 
@@ -32,6 +32,8 @@ import {getCurUsrRootFolderId} from '@/util'
 import MyNoteList from '@/components/NoteList'
 
 export default {
+  props: ['id'],
+
   components: {
     MyNoteList
   },
@@ -46,7 +48,7 @@ export default {
   computed: {
     folderTitle () {
       let title = ''
-      if (this.$route.params.id === this.rootFolderId) {
+      if (this.id === this.rootFolderId) {
         title = 'My Folders'
       } else {
         title = 'Folder: ' + this.folderItem.name
@@ -62,7 +64,7 @@ export default {
   methods: {
     loadFolderInfo () {
       const self = this
-      Model.getFolder(self.$route.params.id)
+      Model.getFolder(self.id)
         .then(function (response) {
           self.folderItem = response.data
         })

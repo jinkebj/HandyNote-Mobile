@@ -9,6 +9,7 @@ import Settings from '@/views/Settings'
 import NoteDetail from '@/components/NoteDetail'
 import FolderDetail from '@/components/FolderDetail'
 import TrashList from '@/components/TrashList'
+import FolderSelect from '@/components/FolderSelect'
 
 Vue.use(Router)
 
@@ -24,11 +25,17 @@ export default new Router({
     },
     {
       path: '/folders/:id',
-      component: FolderDetail
+      component: FolderDetail,
+      props: true
     },
     {
       path: '/folders',
       component: Folders
+    },
+    {
+      path: '/folder-select',
+      component: FolderSelect,
+      props: (route) => ({srcType: route.query.srcType, srcId: route.query.srcId})
     },
     {
       path: '/favorites',
@@ -40,7 +47,8 @@ export default new Router({
     },
     {
       path: '/notes/:id',
-      component: NoteDetail
+      component: NoteDetail,
+      props: true
     },
     {
       path: '/trash',

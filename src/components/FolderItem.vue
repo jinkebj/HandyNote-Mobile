@@ -10,7 +10,8 @@
       <mu-icon-menu icon="more_vert">
         <mu-menu-item title="New Sub Folder" @click="selectFolderToAddSub(noteFolder)" />
         <mu-menu-item title="Rename" v-show="noteFolder.type !== 0" @click="selectFolderToRename(noteFolder)" />
-        <mu-menu-item title="Move To" v-show="noteFolder.type !== 0" />
+        <mu-menu-item title="Move To" v-show="noteFolder.type !== 0"
+          @click="$router.push({path: '/folder-select', query: {srcType: 'folder', srcId: noteFolder.id}})" />
         <mu-menu-item title="Delete" v-show="noteFolder.type !== 0" @click="selectFolderToDelete(noteFolder)" />
       </mu-icon-menu>
     </div>

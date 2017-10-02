@@ -11,7 +11,8 @@
         </div>
 
         <mu-icon-menu slot="right" icon="more_vert">
-          <mu-menu-item title="Move To" />
+          <mu-menu-item title="Move To"
+            @click="$router.push({path: '/folder-select', query: {srcType: 'note', srcId: listItem._id}})" />
           <mu-menu-item title="Delete" @click="selectNote(listItem._id)" />
         </mu-icon-menu>
       </mu-list-item>

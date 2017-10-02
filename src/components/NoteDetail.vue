@@ -5,7 +5,8 @@
       <mu-icon-button icon="clear" slot="right" v-show="editMode" @click="preCancelUpdate" />
       <mu-icon-button icon="done" slot="right" v-show="editMode" @click="updateNote" />
       <mu-icon-menu slot="right" icon="more_vert">
-        <mu-menu-item title="Move To" v-show="!editMode" />
+        <mu-menu-item title="Move To" v-show="!editMode"
+          @click="$router.push({path: '/folder-select', query: {srcType: 'note', srcId: id}})"/>
         <mu-menu-item title="Delete" @click="showDeleteConfirm=true" />
       </mu-icon-menu>
     </mu-appbar>
@@ -137,6 +138,8 @@ import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
 
 export default {
+  props: ['id'],
+
   data () {
     return {
       loadingFlag: true,
@@ -164,7 +167,7 @@ export default {
   methods: {
     loadNote () {
       const self = this
-      Model.getNote(self.$route.params.id)
+      Model.getNote(self.id)
         .then(function (response) {
           self.loadingFlag = false
           self.originNoteName = response.data.name
@@ -184,7 +187,7 @@ export default {
     updateNote () {
       const self = this
       self.loadingFlag = true
-      Model.updateNote(self.$route.params.id, {
+      Model.updateNote(self.id, {
         name: this.noteItem.name,
         text: this.quill.getText(),
         contents: this.quill.getContents().ops
@@ -218,7 +221,7 @@ export default {
 
     deleteNote () {
       const self = this
-      Model.deleteNote(self.$route.params.id)
+      Model.deleteNote(self.id)
         .then(function (response) {
           self.showDeleteConfirm = false
           self.$router.back()
