@@ -1,5 +1,5 @@
 <template>
-  <mu-float-button icon="add" secondary class="note-float-button" @click="addNote" />
+  <mu-float-button icon="add" class="note-float-button" @click="addNote" />
 </template>
 
 <style scoped>

@@ -9,8 +9,8 @@
         <mu-icon slot="left" value="delete"/>
         <div slot="title" class="note-top-folder" @click="$router.push('/trash')">Trash</div>
         <mu-icon-menu slot="after" icon="more_vert">
-          <mu-menu-item title="Empty Trash" @click="emptyTrash" />
-          <mu-menu-item title="Restore All" @click="revertTrash" />
+          <mu-menu-item title="Empty Trash" @click="showEmptyTrashConfirm=true" />
+          <mu-menu-item title="Restore All" @click="showRevertTrashConfirm=true" />
         </mu-icon-menu>
       </mu-list-item>
     </mu-list>
@@ -20,6 +20,18 @@
     <mu-popup position="top" :overlay="false" popupClass="popup-top" :open="emptyTrashPopup">
       Empty trash successfully!
     </mu-popup>
+
+    <mu-dialog :open="showEmptyTrashConfirm" title="Please Confirm">
+      Permanently delete all items in trash? This action can NOT be undone!
+      <mu-flat-button slot="actions" @click="showEmptyTrashConfirm=false" primary label="No"/>
+      <mu-flat-button slot="actions" primary @click="emptyTrash" label="Yes"/>
+    </mu-dialog>
+
+    <mu-dialog :open="showRevertTrashConfirm" title="Please Confirm">
+      Restore all items in trash?
+      <mu-flat-button slot="actions" @click="showRevertTrashConfirm=false" primary label="No"/>
+      <mu-flat-button slot="actions" primary @click="revertTrash" label="Yes"/>
+    </mu-dialog>
   </div>
 </template>
 
@@ -87,7 +99,9 @@ export default {
       ],
       refreshing: false,
       trigger: null,
-      emptyTrashPopup: false
+      emptyTrashPopup: false,
+      showEmptyTrashConfirm: false,
+      showRevertTrashConfirm: false
     }
   },
 
@@ -133,6 +147,7 @@ export default {
       Model.emptyTrash()
         .then(function (response) {
           self.emptyTrashPopup = true
+          self.showEmptyTrashConfirm = false
         })
         .catch(function (error) {
           console.log(error)
@@ -144,6 +159,7 @@ export default {
       Model.revertTrash()
         .then(function (response) {
           self.loadFolderList()
+          self.showRevertTrashConfirm = false
         })
         .catch(function (error) {
           console.log(error)

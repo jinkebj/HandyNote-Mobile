@@ -27,7 +27,7 @@
 
 <script>
 import MyHeader from '@/components/TopBar'
-import MyNoteWidget from '@/components/NoteWidget'
+import MyNoteWidget from '@/components/AddNoteWidget'
 import MyNoteList from '@/components/NoteList'
 import MyFooter from '@/components/BottomBar'
 

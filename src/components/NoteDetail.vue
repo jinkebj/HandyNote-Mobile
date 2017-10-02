@@ -13,7 +13,7 @@
     <div class="page-content">
       <mu-text-field class="note-item-name" multiLine :underlineShow="false" :disabled="!editMode" v-model="noteItem.name"/>
 
-      <mu-float-button icon="edit" secondary class="note-float-button" v-show="!editMode" @click="toggleeditMode" />
+      <mu-float-button icon="edit" class="note-float-button" v-show="!editMode" @click="toggleeditMode" />
 
       <div id="note-toolbar" v-show="editMode">
         <button class="ql-bold"></button>
