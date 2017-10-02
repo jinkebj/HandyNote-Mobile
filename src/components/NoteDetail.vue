@@ -13,6 +13,10 @@
 
     <div class="page-content">
       <mu-text-field class="note-item-name" multiLine :underlineShow="false" :disabled="!editMode" v-model="noteItem.name"/>
+      <div class="note-folder-info">
+        <mu-icon value="folder_open" color="blue"/>
+        <div class="note-folder-info-text">{{noteItem.folder_name}}</div>
+      </div>
 
       <mu-float-button icon="edit" class="note-float-button" v-show="!editMode" @click="toggleeditMode" />
 
@@ -104,6 +108,18 @@
   font-weight: bold;
 }
 
+.note-folder-info {
+  padding-left: 15px;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.note-folder-info-text {
+  padding-left: 8px;
+  color: #2196F3;
+}
+
 .note-float-button {
   position: fixed;
   bottom: 30px;
@@ -122,7 +138,7 @@
   background: #FFFFFF;
   border: 0;
   font-size: 16px;
-  min-height: calc(100vh - 110px);;
+  min-height: calc(100vh - 145px);
 }
 </style>
 
