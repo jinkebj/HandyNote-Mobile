@@ -7,10 +7,16 @@
         <div @click="$router.push('/notes/' + listItem._id)">
           <div class="list-item-name">{{listItem.name | truncate(35)}}</div>
           <div class="list-item-digest">{{listItem.digest | truncate(70)}}</div>
-          <div class="list-item-info">{{listItem.updated_at | fmtDate}} {{listItem.folder_name}}</div>
+          <div class="list-item-info">
+            <div class="list-item-star-icon" v-show="listItem.starred === 1">
+              <mu-icon value="star" color="orange" :size="20" />
+            </div>
+            {{listItem.updated_at | fmtDate}} {{listItem.folder_name}}
+          </div>
         </div>
 
         <mu-icon-menu slot="right" icon="more_vert">
+          <mu-menu-item :title="listItem.starred === 1 ? 'Unstar' : 'Star'" @click="toggleNoteStar(listItem)" />
           <mu-menu-item title="Move To"
             @click="$router.push({path: '/folder-select', query: {srcType: 'note', srcId: listItem._id}})" />
           <mu-menu-item title="Delete" @click="selectNote(listItem._id)" />
@@ -50,6 +56,14 @@
   color: #8492A6;
   font-size: 12px;
   padding: 10px 0 0 0;
+
+  display: flex;
+  align-items: center;
+}
+
+.list-item-star-icon {
+  padding-right: 5px;
+  height: 20px;
 }
 
 .list-item-divider {
@@ -114,6 +128,19 @@ export default {
         .then(function (response) {
           self.showDeleteConfirm = false
           self.refresh()
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    toggleNoteStar (noteItem) {
+      let starValue = (noteItem.starred === 1 ? 0 : 1)
+      Model.updateNote(noteItem._id, {
+        starred: starValue
+      })
+        .then(function (response) {
+          noteItem.starred = starValue
         })
         .catch(function (error) {
           console.log(error)
