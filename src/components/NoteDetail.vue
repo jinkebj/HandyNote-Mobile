@@ -190,10 +190,12 @@ export default {
           self.loadingFlag = false
           self.originNoteName = response.data.name
           self.noteItem = response.data
-          self.quill.setContents(response.data.contents)
+          let contentsJson = (typeof response.data.contents === 'object' ? response.data.contents
+            : JSON.parse(response.data.contents))
+          self.quill.setContents(contentsJson)
 
           // go to edit mode if the note is newly created
-          if (self.editMode === false && response.data.contents.length === 0 && response.data.deleted === 0) {
+          if (self.editMode === false && contentsJson.length === 0 && response.data.deleted === 0) {
             self.toggleeditMode()
           }
         })
@@ -236,7 +238,7 @@ export default {
 
     preCancelUpdate () {
       if (this.originNoteName !== this.noteItem.name ||
-        JSON.stringify(this.quill.getContents().ops) !== JSON.stringify(this.noteItem.contents)) {
+        JSON.stringify(this.quill.getContents().ops) !== this.noteItem.contents) {
         this.showCancelConfirm = true
       } else {
         this.toggleeditMode()
@@ -247,7 +249,7 @@ export default {
       const self = this
       self.showCancelConfirm = false
       self.noteItem.name = self.originNoteName
-      self.quill.setContents(self.noteItem.contents)
+      self.quill.setContents(JSON.parse(self.noteItem.contents))
       self.toggleeditMode()
     },
 

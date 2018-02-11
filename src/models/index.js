@@ -1,75 +1,89 @@
-import http from 'axios'
-import {HANDYNOTE_SERVICE_API} from '@/../config'
+import LocalData from '@/models/local-data'
+import RemoteData from '@/models/remote-data'
 
 const Model = {}
-const BaseAPIUrl = process.env.HANDYNOTE_SERVICE_API || HANDYNOTE_SERVICE_API
+const controller = LocalData
+
+// clean data & execute full sync
+Model.sync = async () => {
+  await LocalData.clear()
+
+  let notesData = (await RemoteData.getNoteList()).data
+  await LocalData.addNoteDataBatch(notesData)
+
+  let notesDetailsData = (await RemoteData.getNoteList({fields: 'all'})).data
+  await LocalData.addNoteDetailDataBatch(notesDetailsData)
+
+  let foldersData = (await RemoteData.getFolderList()).data
+  await LocalData.addFolderDataBatch(foldersData)
+}
 
 Model.getHttpPrototype = () => {
-  return http
+  return RemoteData.getHttpPrototype()
 }
 
 Model.login = (params) => {
-  return http.post(BaseAPIUrl + '/tokens/', params)
+  return RemoteData.login(params)
 }
 
 Model.getNoteList = (params) => {
-  return http.get(BaseAPIUrl + '/notes', { params: params })
+  return controller.getNoteList(params)
 }
 
 Model.addNote = (params) => {
-  return http.post(BaseAPIUrl + '/notes/', params)
+  return controller.addNote(params)
 }
 
 Model.getNote = (id) => {
-  return http.get(BaseAPIUrl + '/notes/' + id)
+  return controller.getNote(id)
 }
 
 Model.updateNote = (id, params) => {
-  return http.post(BaseAPIUrl + '/notes/' + id, params)
+  return controller.updateNote(id, params)
 }
 
 Model.deleteNote = (id) => {
-  return http.delete(BaseAPIUrl + '/notes/' + id)
+  return controller.deleteNote(id)
 }
 
 Model.getFolderTreeData = (params) => {
-  return http.get(BaseAPIUrl + '/folders/tree-info', { params: params })
+  return controller.getFolderTreeData(params)
 }
 
 Model.addFolder = (params) => {
-  return http.post(BaseAPIUrl + '/folders/', params)
+  return controller.addFolder(params)
 }
 
 Model.getFolder = (id) => {
-  return http.get(BaseAPIUrl + '/folders/' + id)
+  return controller.getFolder(id)
 }
 
 Model.updateFolder = (id, params) => {
-  return http.post(BaseAPIUrl + '/folders/' + id, params)
+  return controller.updateFolder(id, params)
 }
 
 Model.deleteFolder = (id) => {
-  return http.delete(BaseAPIUrl + '/folders/' + id)
+  return controller.deleteFolder(id)
 }
 
 Model.getTrash = () => {
-  return http.get(BaseAPIUrl + '/trash')
+  return controller.getTrash()
 }
 
 Model.emptyTrash = () => {
-  return http.post(BaseAPIUrl + '/trash/empty')
+  return controller.emptyTrash()
 }
 
 Model.revertTrash = () => {
-  return http.post(BaseAPIUrl + '/trash/revert')
+  return controller.revertTrash()
 }
 
 Model.deleteTrash = (id) => {
-  return http.delete(BaseAPIUrl + '/trash/' + id)
+  return controller.deleteTrash(id)
 }
 
 Model.restoreTrash = (id) => {
-  return http.post(BaseAPIUrl + '/trash/' + id + '/restore')
+  return controller.restoreTrash(id)
 }
 
 export default Model
