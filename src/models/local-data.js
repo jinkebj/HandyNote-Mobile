@@ -1,11 +1,11 @@
 import http from 'axios'
 import {HANDYNOTE_SERVICE_API} from '@/../config'
+const BaseAPIUrl = process.env.HANDYNOTE_SERVICE_API || HANDYNOTE_SERVICE_API
+
 import Dexie from 'dexie'
 import {prepareFolderData} from '@/util'
 
 const LocalData = {}
-const BaseAPIUrl = process.env.HANDYNOTE_SERVICE_API || HANDYNOTE_SERVICE_API
-
 const db = new Dexie('HandyNote')
 
 // define local db schema
@@ -50,8 +50,12 @@ LocalData.getNoteList = async (params) => {
   return { data: retData }
 }
 
-LocalData.addNote = (params) => {
-  return http.post(BaseAPIUrl + '/notes/', params)
+LocalData.addNote = async (params) => {
+  if (params.contents !== undefined && typeof params.contents === 'object') {
+    params.contents = JSON.stringify(params.contents)
+  }
+  await db.notesDetails.put(params)
+  return await db.notes.put(params)
 }
 
 LocalData.getNote = async (id) => {
@@ -59,12 +63,17 @@ LocalData.getNote = async (id) => {
   return { data: retData }
 }
 
-LocalData.updateNote = (id, params) => {
-  return http.post(BaseAPIUrl + '/notes/' + id, params)
+LocalData.updateNote = async (id, params) => {
+  if (params.contents !== undefined && typeof params.contents === 'object') {
+    params.contents = JSON.stringify(params.contents)
+  }
+  await db.notesDetails.update(id, params)
+  return await db.notes.update(id, params)
 }
 
-LocalData.deleteNote = (id) => {
-  return http.delete(BaseAPIUrl + '/notes/' + id)
+LocalData.deleteNote = async (id) => {
+  await db.notesDetails.delete(id)
+  return await db.notes.delete(id)
 }
 
 LocalData.getFolderTreeData = async (params) => {
@@ -75,7 +84,7 @@ LocalData.getFolderTreeData = async (params) => {
 }
 
 LocalData.addFolder = (params) => {
-  return http.post(BaseAPIUrl + '/folders/', params)
+  return db.folders.add(params)
 }
 
 LocalData.getFolder = async (id) => {
@@ -83,32 +92,36 @@ LocalData.getFolder = async (id) => {
   return { data: retData }
 }
 
-LocalData.updateFolder = (id, params) => {
-  return http.post(BaseAPIUrl + '/folders/' + id, params)
+LocalData.updateFolder = async (id, params) => {
+  let retData = await db.folders.update(id, params)
+  return { data: retData }
 }
 
-LocalData.deleteFolder = (id) => {
-  return http.delete(BaseAPIUrl + '/folders/' + id)
+LocalData.deleteFolder = async (id) => {
+  await db.notes.where({folder_id: id}).delete()
+  await db.notesDetails.where({folder_id: id}).delete()
+  return await db.folders.delete(id)
 }
 
-LocalData.getTrash = () => {
-  return http.get(BaseAPIUrl + '/trash')
-}
+// LocalData.getTrash = async () => {
+//   let retData = await db.notes.where({deleted: 1}).reverse().sortBy('updated_at')
+//   return { data: retData }
+// }
 
-LocalData.emptyTrash = () => {
-  return http.post(BaseAPIUrl + '/trash/empty')
-}
-
-LocalData.revertTrash = () => {
-  return http.post(BaseAPIUrl + '/trash/revert')
-}
-
-LocalData.deleteTrash = (id) => {
-  return http.delete(BaseAPIUrl + '/trash/' + id)
-}
-
-LocalData.restoreTrash = (id) => {
-  return http.post(BaseAPIUrl + '/trash/' + id + '/restore')
-}
+// LocalData.emptyTrash = () => {
+//   return http.post(BaseAPIUrl + '/trash/empty')
+// }
+//
+// LocalData.revertTrash = () => {
+//   return http.post(BaseAPIUrl + '/trash/revert')
+// }
+//
+// LocalData.deleteTrash = (id) => {
+//   return http.delete(BaseAPIUrl + '/trash/' + id)
+// }
+//
+// LocalData.restoreTrash = (id) => {
+//   return http.post(BaseAPIUrl + '/trash/' + id + '/restore')
+// }
 
 export default LocalData

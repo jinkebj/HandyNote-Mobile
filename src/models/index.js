@@ -2,7 +2,6 @@ import LocalData from '@/models/local-data'
 import RemoteData from '@/models/remote-data'
 
 const Model = {}
-const controller = LocalData
 
 // clean data & execute full sync
 Model.sync = async () => {
@@ -27,63 +26,75 @@ Model.login = (params) => {
 }
 
 Model.getNoteList = (params) => {
-  return controller.getNoteList(params)
+  return LocalData.getNoteList(params)
 }
 
-Model.addNote = (params) => {
-  return controller.addNote(params)
+Model.addNote = async (params) => {
+  let ret = await RemoteData.addNote(params)
+  LocalData.addNote(ret.data)
+  return ret
 }
 
 Model.getNote = (id) => {
-  return controller.getNote(id)
+  return LocalData.getNote(id)
 }
 
-Model.updateNote = (id, params) => {
-  return controller.updateNote(id, params)
+Model.updateNote = async (id, params) => {
+  let ret = await RemoteData.updateNote(id, params)
+  LocalData.updateNote(id, ret.data)
+  return ret
 }
 
-Model.deleteNote = (id) => {
-  return controller.deleteNote(id)
+Model.deleteNote = async (id) => {
+  let ret = await RemoteData.deleteNote(id)
+  LocalData.deleteNote(id)
+  return ret
 }
 
 Model.getFolderTreeData = (params) => {
-  return controller.getFolderTreeData(params)
+  return LocalData.getFolderTreeData(params)
 }
 
-Model.addFolder = (params) => {
-  return controller.addFolder(params)
+Model.addFolder = async (params) => {
+  let ret = await RemoteData.addFolder(params)
+  LocalData.addFolder(ret.data)
+  return ret
 }
 
 Model.getFolder = (id) => {
-  return controller.getFolder(id)
+  return LocalData.getFolder(id)
 }
 
-Model.updateFolder = (id, params) => {
-  return controller.updateFolder(id, params)
+Model.updateFolder = async (id, params) => {
+  let ret = await RemoteData.updateFolder(id, params)
+  await LocalData.updateFolder(id, params)
+  return ret
 }
 
-Model.deleteFolder = (id) => {
-  return controller.deleteFolder(id)
+Model.deleteFolder = async (id) => {
+  let ret = await RemoteData.deleteFolder(id)
+  await LocalData.deleteFolder(id)
+  return ret
 }
 
 Model.getTrash = () => {
-  return controller.getTrash()
+  return RemoteData.getTrash()
 }
 
 Model.emptyTrash = () => {
-  return controller.emptyTrash()
+  return RemoteData.emptyTrash()
 }
 
 Model.revertTrash = () => {
-  return controller.revertTrash()
+  return RemoteData.revertTrash()
 }
 
 Model.deleteTrash = (id) => {
-  return controller.deleteTrash(id)
+  return RemoteData.deleteTrash(id)
 }
 
 Model.restoreTrash = (id) => {
-  return controller.restoreTrash(id)
+  return RemoteData.restoreTrash(id)
 }
 
 export default Model
