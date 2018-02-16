@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="infinite-container">
     <mu-refresh-control :refreshing="refreshing" :trigger="trigger" @refresh="refresh"/>
 
     <mu-list>
@@ -24,7 +24,7 @@
       </mu-list-item>
     </mu-list>
 
-    <mu-circular-progress class="loading-indicator" :size="40" v-show="loadingFlag" />
+    <mu-infinite-scroll :scroller="scroller" :loading="loadMoreFlag" loadingText="" @load="loadMore"/>
 
     <mu-dialog :open="showDeleteConfirm" title="Please Confirm">
       Move this note to trash?
@@ -35,6 +35,12 @@
 </template>
 
 <style scoped>
+.infinite-container {
+  height: calc(100vh - 56px);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .loading-indicator {
   position: fixed;
   top: calc(100vh / 2 - 20px);
@@ -82,26 +88,29 @@ export default {
 
   data () {
     return {
-      loadingFlag: true,
+      limit: 5,
+      skip: 0,
+      loadMoreFlag: false,
       showDeleteConfirm: false,
       selectedNoteId: '',
       refreshing: false,
       trigger: null,
+      scroller: null,
       listItems: []
     }
   },
 
   mounted () {
-    this.loadNoteList()
+    this.loadNoteList(0)
     this.trigger = this.$el
+    this.scroller = this.$el
   },
 
   methods: {
-    loadNoteList () {
+    loadNoteList (skip) {
       const self = this
-      self.loadingFlag = true
-
-      let params = {}
+      let params = {skip: skip, limit: self.limit}
+      console.log(JSON.stringify(params))
       if (self.folderId === getCurUsrStarFolderId()) {
         params.starred = 1
       } else {
@@ -109,8 +118,12 @@ export default {
       }
       Model.getNoteList(params)
         .then(function (response) {
-          self.listItems = response.data
-          self.loadingFlag = false
+          if (skip === 0) {
+            self.listItems = response.data
+          } else {
+            self.listItems.push(...response.data)
+          }
+          self.skip = self.listItems.length
         })
         .catch(function (error) {
           console.log(error)
@@ -150,9 +163,17 @@ export default {
     refresh () {
       this.refreshing = true
       setTimeout(() => {
-        this.loadNoteList()
+        this.loadNoteList(0)
         this.refreshing = false
       }, 1000)
+    },
+
+    loadMore () {
+      this.loadMoreFlag = true
+      setTimeout(() => {
+        this.loadNoteList(this.skip)
+        this.loadMoreFlag = false
+      }, 2000)
     }
   }
 }

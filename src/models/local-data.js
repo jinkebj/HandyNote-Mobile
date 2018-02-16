@@ -31,12 +31,29 @@ LocalData.addFolderDataBatch = async (foldersData) => {
 }
 
 LocalData.getNoteList = async (params) => {
-  let retData
-  if (JSON.stringify(params) === JSON.stringify({})) {
-    retData = await db.notes.toCollection().reverse().sortBy('updated_at')
-  } else {
-    retData = await db.notes.where(params).reverse().sortBy('updated_at')
+  let skip = -1
+  if (params.skip !== undefined && typeof params.skip === 'number') {
+    skip = params.skip
+    delete params.skip
   }
+
+  let limit = -1
+  if (params.limit !== undefined && typeof params.limit === 'number') {
+    limit = params.limit
+    delete params.limit
+  }
+
+  let query
+  if (JSON.stringify(params) === JSON.stringify({})) {
+    query = db.notes.toCollection().reverse()
+  } else {
+    query = db.notes.where(params).reverse()
+  }
+
+  if (skip >= 0) query = query.offset(skip)
+  if (limit > 0) query = query.limit(limit)
+
+  let retData = await query.sortBy('updated_at')
   return { data: retData }
 }
 
