@@ -7,11 +7,8 @@ const Model = {}
 Model.sync = async () => {
   await LocalData.clear()
 
-  let notesData = (await RemoteData.getNoteList()).data
+  let notesData = (await RemoteData.getNoteList({fields: 'all'})).data
   await LocalData.addNoteDataBatch(notesData)
-
-  let notesDetailsData = (await RemoteData.getNoteList({fields: 'all'})).data
-  await LocalData.addNoteDetailDataBatch(notesDetailsData)
 
   let foldersData = (await RemoteData.getFolderList()).data
   await LocalData.addFolderDataBatch(foldersData)
@@ -31,7 +28,7 @@ Model.getNoteList = (params) => {
 
 Model.addNote = async (params) => {
   let ret = await RemoteData.addNote(params)
-  LocalData.addNote(ret.data)
+  await LocalData.addNote(ret.data)
   return ret
 }
 
@@ -41,13 +38,13 @@ Model.getNote = (id) => {
 
 Model.updateNote = async (id, params) => {
   let ret = await RemoteData.updateNote(id, params)
-  LocalData.updateNote(id, ret.data)
+  await LocalData.updateNote(id, params)
   return ret
 }
 
 Model.deleteNote = async (id) => {
   let ret = await RemoteData.deleteNote(id)
-  LocalData.deleteNote(id)
+  await LocalData.deleteNote(id)
   return ret
 }
 
@@ -57,7 +54,7 @@ Model.getFolderTreeData = (params) => {
 
 Model.addFolder = async (params) => {
   let ret = await RemoteData.addFolder(params)
-  LocalData.addFolder(ret.data)
+  await LocalData.addFolder(ret.data)
   return ret
 }
 

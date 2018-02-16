@@ -1,7 +1,3 @@
-import http from 'axios'
-import {HANDYNOTE_SERVICE_API} from '@/../config'
-const BaseAPIUrl = process.env.HANDYNOTE_SERVICE_API || HANDYNOTE_SERVICE_API
-
 import Dexie from 'dexie'
 import {prepareFolderData} from '@/util'
 
@@ -10,27 +6,21 @@ const db = new Dexie('HandyNote')
 
 // define local db schema
 db.version(1).stores({
-  notes: '&_id, name, digest, *folder_id, folder_name, starred, deleted, updated_at',
-  notesDetails: '&_id, name, text, contents, *folder_id, starred, deleted, owner, folder_name, digest, created_at, updated_at',
-  folders: '&_id, name, parent_id, ancestor_ids, deleted, updated_at'
+  notes: '&_id, name, text, contents, *folder_id, starred, deleted, owner, folder_name, digest, created_at, updated_at',
+  folders: '&_id, name, parent_id, ancestor_ids, deleted, owner, created_at, updated_at'
 })
 
 LocalData.clear = async () => {
   await db.notes.clear()
-  await db.notesDetails.clear()
   await db.folders.clear()
 }
 
 LocalData.addNoteDataBatch = async (notesData) => {
   for (let noteData of notesData) {
+    if (noteData.contents !== undefined && typeof noteData.contents === 'object') {
+      noteData.contents = JSON.stringify(noteData.contents)
+    }
     await db.notes.put(noteData)
-  }
-}
-
-LocalData.addNoteDetailDataBatch = async (notesData) => {
-  for (let noteData of notesData) {
-    noteData.contents = JSON.stringify(noteData.contents)
-    await db.notesDetails.put(noteData)
   }
 }
 
@@ -54,12 +44,11 @@ LocalData.addNote = async (params) => {
   if (params.contents !== undefined && typeof params.contents === 'object') {
     params.contents = JSON.stringify(params.contents)
   }
-  await db.notesDetails.put(params)
   return await db.notes.put(params)
 }
 
 LocalData.getNote = async (id) => {
-  let retData = await db.notesDetails.get(id)
+  let retData = await db.notes.get(id)
   return { data: retData }
 }
 
@@ -67,24 +56,27 @@ LocalData.updateNote = async (id, params) => {
   if (params.contents !== undefined && typeof params.contents === 'object') {
     params.contents = JSON.stringify(params.contents)
   }
-  await db.notesDetails.update(id, params)
   return await db.notes.update(id, params)
 }
 
 LocalData.deleteNote = async (id) => {
-  await db.notesDetails.delete(id)
   return await db.notes.delete(id)
 }
 
 LocalData.getFolderTreeData = async (params) => {
-  let folderData = await db.folders.toCollection().sortBy('name')
-  let folderStatisticsData = await http.get(BaseAPIUrl + '/folders/statistics', params)
-  let retData = prepareFolderData(folderData, folderStatisticsData.data)
+  let foldersData = await db.folders.toCollection().sortBy('name')
+  // let folderStatisticsData = (await http.get(BaseAPIUrl + '/folders/statistics', params)).data
+  let folderStatisticsData = []
+  for (let folderData of foldersData) {
+    let noteCount = await db.notes.where('folder_id').equals(folderData._id).count()
+    folderStatisticsData.push({_id: folderData._id, count: noteCount})
+  }
+  let retData = prepareFolderData(foldersData, folderStatisticsData)
   return { data: retData }
 }
 
-LocalData.addFolder = (params) => {
-  return db.folders.add(params)
+LocalData.addFolder = async (params) => {
+  return await db.folders.put(params)
 }
 
 LocalData.getFolder = async (id) => {
@@ -94,34 +86,17 @@ LocalData.getFolder = async (id) => {
 
 LocalData.updateFolder = async (id, params) => {
   let retData = await db.folders.update(id, params)
-  return { data: retData }
+  // await db.notes.where('folder_id').equals(id).modify({folder_name: params.name})
+  // workaround for safari issue, https://github.com/dfahlander/Dexie.js/issues/594
+  await db.notes.where('folder_id').equals(id).primaryKeys().then(keys => {
+    db.notes.where('_id').anyOf(keys).modify({folder_name: params.name})
+  })
+  return retData
 }
 
 LocalData.deleteFolder = async (id) => {
   await db.notes.where({folder_id: id}).delete()
-  await db.notesDetails.where({folder_id: id}).delete()
   return await db.folders.delete(id)
 }
-
-// LocalData.getTrash = async () => {
-//   let retData = await db.notes.where({deleted: 1}).reverse().sortBy('updated_at')
-//   return { data: retData }
-// }
-
-// LocalData.emptyTrash = () => {
-//   return http.post(BaseAPIUrl + '/trash/empty')
-// }
-//
-// LocalData.revertTrash = () => {
-//   return http.post(BaseAPIUrl + '/trash/revert')
-// }
-//
-// LocalData.deleteTrash = (id) => {
-//   return http.delete(BaseAPIUrl + '/trash/' + id)
-// }
-//
-// LocalData.restoreTrash = (id) => {
-//   return http.post(BaseAPIUrl + '/trash/' + id + '/restore')
-// }
 
 export default LocalData
