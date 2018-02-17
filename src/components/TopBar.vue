@@ -4,7 +4,7 @@
       <mu-icon-button icon="search" slot="right"/>
       <mu-icon-button icon="sync" slot="right" @click="syncData" />
     </mu-appbar>
-    <mu-popup position="top" overlay="true" popupClass="popup-top" :open="syncFlag">
+    <mu-popup position="top" popupClass="popup-top" :open="syncFlag">
       Sync with server ...
     </mu-popup>
   </div>

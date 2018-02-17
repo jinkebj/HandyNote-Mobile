@@ -15,7 +15,7 @@
       </mu-list-item>
     </mu-list>
 
-    <mu-popup position="top" overlay="true" popupClass="popup-top" :open="emptyTrashPopup">
+    <mu-popup position="top" popupClass="popup-top" :open="emptyTrashPopup">
       Empty trash successfully!
     </mu-popup>
 
