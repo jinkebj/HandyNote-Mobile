@@ -15,8 +15,6 @@
       </mu-list-item>
     </mu-list>
 
-    <mu-circular-progress class="loading-indicator" :size="40" v-show="loadingFlag" />
-
     <mu-popup position="top" :overlay="false" popupClass="popup-top" :open="emptyTrashPopup">
       Empty trash successfully!
     </mu-popup>
@@ -84,7 +82,6 @@ export default {
 
   data () {
     return {
-      loadingFlag: true,
       trashFolderId: getCurUsrTrashFolderId(),
       noteFolders: [
         {
@@ -123,11 +120,10 @@ export default {
   methods: {
     loadFolderList () {
       const self = this
-      self.loadingFlag = true
       Model.getFolderTreeData()
         .then(function (response) {
           self.noteFolders = response.data
-          self.loadingFlag = false
+          self.refreshing = false
         })
         .catch(function (error) {
           console.log(error)
@@ -136,10 +132,7 @@ export default {
 
     refresh () {
       this.refreshing = true
-      setTimeout(() => {
-        this.loadFolderList()
-        this.refreshing = false
-      }, 1000)
+      this.loadFolderList()
     },
 
     emptyTrash () {

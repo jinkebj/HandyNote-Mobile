@@ -36,7 +36,7 @@
 
 <style scoped>
 .infinite-container {
-  height: calc(100vh - 56px);
+  height: calc(100vh - 66px);
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -110,7 +110,7 @@ export default {
     loadNoteList (skip) {
       const self = this
       let params = {skip: skip, limit: self.limit}
-      console.log(JSON.stringify(params))
+
       if (self.folderId === getCurUsrStarFolderId()) {
         params.starred = 1
       } else {
@@ -124,6 +124,8 @@ export default {
             self.listItems.push(...response.data)
           }
           self.skip = self.listItems.length
+          self.loadMoreFlag = false
+          self.refreshing = false
         })
         .catch(function (error) {
           console.log(error)
@@ -162,18 +164,12 @@ export default {
 
     refresh () {
       this.refreshing = true
-      setTimeout(() => {
-        this.loadNoteList(0)
-        this.refreshing = false
-      }, 1000)
+      this.loadNoteList(0)
     },
 
     loadMore () {
       this.loadMoreFlag = true
-      setTimeout(() => {
-        this.loadNoteList(this.skip)
-        this.loadMoreFlag = false
-      }, 2000)
+      this.loadNoteList(this.skip)
     }
   }
 }

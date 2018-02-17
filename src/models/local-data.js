@@ -50,10 +50,14 @@ LocalData.getNoteList = async (params) => {
     query = db.notes.where(params).reverse()
   }
 
-  if (skip >= 0) query = query.offset(skip)
-  if (limit > 0) query = query.limit(limit)
+  // if (skip >= 0) query = query.offset(skip)
+  // if (limit > 0) query = query.limit(limit)
 
   let retData = await query.sortBy('updated_at')
+
+  if (skip >= 0) retData = retData.slice(skip)
+  if (limit > 0) retData = retData.slice(0, limit)
+
   return { data: retData }
 }
 

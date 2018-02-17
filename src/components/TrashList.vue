@@ -105,6 +105,7 @@ export default {
         .then(function (response) {
           self.listItems = response.data
           self.loadingFlag = false
+          self.refreshing = false
         })
         .catch(function (error) {
           console.log(error)
@@ -141,10 +142,7 @@ export default {
 
     refresh () {
       this.refreshing = true
-      setTimeout(() => {
-        this.loadTrashList()
-        this.refreshing = false
-      }, 1000)
+      this.loadTrashList()
     }
   }
 }
