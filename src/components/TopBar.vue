@@ -1,8 +1,13 @@
 <template>
-  <mu-appbar title="Handy Note">
-    <mu-icon-button icon="search" slot="right"/>
-    <mu-icon-button icon="sync" slot="right" @click="syncData" />
-  </mu-appbar>
+  <div>
+    <mu-appbar title="Handy Note">
+      <mu-icon-button icon="search" slot="right"/>
+      <mu-icon-button icon="sync" slot="right" @click="syncData" />
+    </mu-appbar>
+    <mu-popup position="top" overlay="true" popupClass="popup-top" :open="syncFlag">
+      Sync with server ...
+    </mu-popup>
+  </div>
 </template>
 
 <style scoped>
@@ -14,16 +19,14 @@ import Model from '@/models'
 export default {
   data () {
     return {
-      loadingFlag: true
+      syncFlag: false
     }
   },
 
   methods: {
     syncData () {
-      const self = this
-      self.loadingFlag = true
-      Model.sync()
-      self.loadingFlag = false
+      this.syncFlag = true
+      Model.sync().then(response => { this.syncFlag = false })
     }
   }
 }
