@@ -62,6 +62,19 @@ export const prepareFolderData = (folderData, folderStatisticsData) => {
   return [itemMap.get(rootItem.id)]
 }
 
+export const getImgObj = (url) => {
+  return new Promise((resolve, reject) => {
+    var img = new Image()
+    img.src = url
+    img.onload = () => {
+      resolve(img)
+    }
+    img.onerror = (err) => {
+      reject(err)
+    }
+  })
+}
+
 export const getCurUsrId = () => { return window.localStorage.getItem('hn-user') }
 
 export const getCurUsrRootFolderId = () => { return window.localStorage.getItem('hn-user') + '-Root' }

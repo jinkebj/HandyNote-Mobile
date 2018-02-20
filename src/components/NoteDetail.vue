@@ -151,9 +151,11 @@
 </style>
 
 <script>
+import {getImgObj} from '@/util'
 import Model from '@/models'
 import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
+import Pica from 'pica'
 
 export default {
   props: ['id'],
@@ -190,6 +192,7 @@ export default {
           self.loadingFlag = false
           self.originNoteName = response.data.name
           self.noteItem = response.data
+
           let contentsJson = (typeof response.data.contents === 'object' ? response.data.contents
             : JSON.parse(response.data.contents))
           self.quill.setContents(contentsJson)
@@ -204,15 +207,53 @@ export default {
         })
     },
 
+    handleImgResize (contentsJson) {
+      // resize image per need
+      const MAX_SIZE = 600
+      const pica = new Pica()
+      contentsJson.forEach(async function (op) {
+        if (op.insert !== undefined &&
+          typeof op.insert === 'object' &&
+          op.insert.image !== undefined &&
+          op.insert.image.startsWith('data:image')) {
+          let origImgObj = await getImgObj(op.insert.image)
+          console.log('width: ' + origImgObj.width + ', height: ' + origImgObj.height)
+          if (origImgObj.width > MAX_SIZE || origImgObj.height > MAX_SIZE) {
+            // calculate resized width & height
+            let resizedWidth = origImgObj.width
+            let resizedHeight = origImgObj.height
+            if (resizedHeight > resizedWidth) {
+              resizedHeight = Math.min(resizedHeight, MAX_SIZE)
+              resizedWidth = resizedHeight * (origImgObj.width / origImgObj.height)
+            } else {
+              resizedWidth = Math.min(resizedWidth, MAX_SIZE)
+              resizedHeight = resizedWidth * (origImgObj.height / origImgObj.width)
+            }
+
+            let resizedCanvas = document.createElement('canvas')
+            resizedCanvas.width = resizedWidth
+            resizedCanvas.height = resizedHeight
+            let result = await pica.resize(origImgObj, resizedCanvas)
+            op.insert.image = result.toDataURL()
+            console.log('resize image successfully!')
+          }
+        }
+      })
+      return contentsJson
+    },
+
     updateNote () {
       const self = this
       self.loadingFlag = true
+      let contentsJson = this.handleImgResize(this.quill.getContents().ops)
+
       Model.updateNote(self.id, {
         name: this.noteItem.name,
         text: this.quill.getText(),
-        contents: this.quill.getContents().ops
+        contents: contentsJson
       })
         .then(function (response) {
+          self.quill.setContents(contentsJson)
           self.loadingFlag = false
           self.noteItem = response.data
           self.toggleeditMode()
