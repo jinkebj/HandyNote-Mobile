@@ -1,3 +1,4 @@
+import Pica from 'pica'
 export * from '@/util/filters'
 
 export const prepareFolderData = (folderData, folderStatisticsData) => {
@@ -62,7 +63,7 @@ export const prepareFolderData = (folderData, folderStatisticsData) => {
   return [itemMap.get(rootItem.id)]
 }
 
-export const getImgObj = (url) => {
+const getImgObj = (url) => {
   return new Promise((resolve, reject) => {
     var img = new Image()
     img.src = url
@@ -73,6 +74,37 @@ export const getImgObj = (url) => {
       reject(err)
     }
   })
+}
+
+const pica = new Pica()
+
+export const getResizedImgData = async (origImgData, MAX_SIZE) => {
+  let ret = origImgData
+  let origImgObj = await getImgObj(origImgData)
+  console.log('original img width: ' + origImgObj.width + ', height: ' + origImgObj.height)
+
+  if (origImgObj.width > MAX_SIZE || origImgObj.height > MAX_SIZE) {
+    // calculate resized width & height
+    let resizedWidth = origImgObj.width
+    let resizedHeight = origImgObj.height
+    if (resizedHeight > resizedWidth) {
+      resizedHeight = Math.min(resizedHeight, MAX_SIZE)
+      resizedWidth = resizedHeight * (origImgObj.width / origImgObj.height)
+    } else {
+      resizedWidth = Math.min(resizedWidth, MAX_SIZE)
+      resizedHeight = resizedWidth * (origImgObj.height / origImgObj.width)
+    }
+    console.log('resized img width: ' + resizedWidth + ', height: ' + resizedHeight)
+
+    let resizedCanvas = document.createElement('canvas')
+    resizedCanvas.width = resizedWidth
+    resizedCanvas.height = resizedHeight
+
+    let result = await pica.resize(origImgObj, resizedCanvas)
+    ret = result.toDataURL()
+  }
+
+  return ret
 }
 
 export const getCurUsrId = () => { return window.localStorage.getItem('hn-user') }
