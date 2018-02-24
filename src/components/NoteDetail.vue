@@ -195,7 +195,7 @@ export default {
 
           let contentsJson = (typeof response.data.contents === 'object' ? response.data.contents
             : JSON.parse(response.data.contents))
-          self.quill.setContents(contentsJson)
+          self.quill.setContents(self.handleImgUrl(contentsJson))
 
           // go to edit mode if the note is newly created
           if (self.editMode === false && contentsJson.length === 0 && response.data.deleted === 0) {
@@ -207,6 +207,22 @@ export default {
         })
     },
 
+    handleImgUrl (contentsJson) {
+      for (let i = 0; i < contentsJson.length; i++) {
+        let op = contentsJson[i]
+        if (op.insert !== undefined &&
+          typeof op.insert === 'object' &&
+          op.insert.image !== undefined &&
+          typeof op.insert.image === 'string' &&
+          !op.insert.image.startsWith('data:image') &&
+          !op.insert.image.startsWith('http') &&
+          !op.insert.image.startsWith('//')) {
+          op.insert.image = Model.getPublicUrl() + '/' + op.insert.image
+        }
+      }
+      return contentsJson
+    },
+
     async handleImgResize (contentsJson) {
       let retJson = []
       for (let i = 0; i < contentsJson.length; i++) {
@@ -214,9 +230,13 @@ export default {
         if (op.insert !== undefined &&
           typeof op.insert === 'object' &&
           op.insert.image !== undefined &&
-          typeof op.insert.image === 'string' &&
-          op.insert.image.startsWith('data:image')) {
-          retJson.push({insert: {image: await getResizedImgData(op.insert.image, 600)}})
+          typeof op.insert.image === 'string') {
+          if (op.insert.image.startsWith('data:image')) {
+            retJson.push({insert: {image: await getResizedImgData(op.insert.image, 600)}})
+          } else {
+            let newImgUrl = op.insert.image.replace(Model.getPublicUrl() + '/', '')
+            retJson.push({insert: {image: newImgUrl}})
+          }
         } else {
           retJson.push(op)
         }
@@ -235,7 +255,9 @@ export default {
         contents: contentsJson
       })
         .then(function (response) {
-          self.quill.setContents(contentsJson)
+          let contentsJson = (typeof response.data.contents === 'object' ? response.data.contents
+            : JSON.parse(response.data.contents))
+          self.quill.setContents(self.handleImgUrl(contentsJson))
           self.loadingFlag = false
           self.noteItem = response.data
           self.toggleeditMode()

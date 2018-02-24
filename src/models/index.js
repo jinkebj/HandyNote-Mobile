@@ -14,6 +14,10 @@ Model.sync = async () => {
   await LocalData.addFolderDataBatch(foldersData)
 }
 
+Model.getPublicUrl = () => {
+  return RemoteData.getPublicUrl()
+}
+
 Model.getHttpPrototype = () => {
   return RemoteData.getHttpPrototype()
 }
@@ -38,7 +42,7 @@ Model.getNote = (id) => {
 
 Model.updateNote = async (id, params) => {
   let ret = await RemoteData.updateNote(id, params)
-  await LocalData.updateNote(id, params)
+  await LocalData.updateNote(id, ret.data)
   return ret
 }
 
