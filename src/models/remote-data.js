@@ -4,8 +4,8 @@ import {HANDYNOTE_SERVICE_API} from '@/../config'
 const RemoteData = {}
 const BaseAPIUrl = process.env.HANDYNOTE_SERVICE_API || HANDYNOTE_SERVICE_API
 
-RemoteData.getPublicUrl = () => {
-  return BaseAPIUrl + '/public'
+RemoteData.getStaticUrl = () => {
+  return BaseAPIUrl + '/handynote-static'
 }
 
 RemoteData.getHttpPrototype = () => {

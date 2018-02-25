@@ -14,8 +14,8 @@ Model.sync = async () => {
   await LocalData.addFolderDataBatch(foldersData)
 }
 
-Model.getPublicUrl = () => {
-  return RemoteData.getPublicUrl()
+Model.getStaticUrl = () => {
+  return RemoteData.getStaticUrl()
 }
 
 Model.getHttpPrototype = () => {

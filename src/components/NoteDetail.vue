@@ -217,7 +217,7 @@ export default {
           !op.insert.image.startsWith('data:image') &&
           !op.insert.image.startsWith('http') &&
           !op.insert.image.startsWith('//')) {
-          op.insert.image = Model.getPublicUrl() + '/' + op.insert.image
+          op.insert.image = Model.getStaticUrl() + '/' + this.id + '/' + op.insert.image
         }
       }
       return contentsJson
@@ -234,7 +234,7 @@ export default {
           if (op.insert.image.startsWith('data:image')) {
             retJson.push({insert: {image: await getResizedImgData(op.insert.image, 600)}})
           } else {
-            let newImgUrl = op.insert.image.replace(Model.getPublicUrl() + '/', '')
+            let newImgUrl = op.insert.image.replace(Model.getStaticUrl() + '/' + this.id + '/', '')
             retJson.push({insert: {image: newImgUrl}})
           }
         } else {
