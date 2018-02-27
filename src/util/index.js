@@ -1,4 +1,5 @@
 import Pica from 'pica'
+import {maxUploadPicSize} from '@/../config'
 export * from '@/util/filters'
 
 export const prepareFolderData = (folderData, folderStatisticsData) => {
@@ -78,7 +79,8 @@ const getImgObj = (url) => {
 
 const pica = new Pica()
 
-export const getResizedImgData = async (origImgData, MAX_SIZE) => {
+export const getResizedImgData = async (origImgData) => {
+  const MAX_SIZE = maxUploadPicSize
   let ret = origImgData
   let origImgObj = await getImgObj(origImgData)
   console.log('original img width: ' + origImgObj.width + ', height: ' + origImgObj.height)

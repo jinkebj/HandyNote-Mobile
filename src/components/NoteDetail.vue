@@ -232,7 +232,7 @@ export default {
           op.insert.image !== undefined &&
           typeof op.insert.image === 'string') {
           if (op.insert.image.startsWith('data:image')) {
-            retJson.push({insert: {image: await getResizedImgData(op.insert.image, 600)}})
+            retJson.push({insert: {image: await getResizedImgData(op.insert.image)}})
           } else {
             let newImgUrl = op.insert.image.replace(Model.getStaticUrl() + '/' + this.id + '/', '')
             retJson.push({insert: {image: newImgUrl}})

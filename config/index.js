@@ -35,5 +35,6 @@ module.exports = {
     // just be aware of this issue when enabling this option.
     cssSourceMap: false
   },
-  HANDYNOTE_SERVICE_API: 'http://localhost:3000/api'
+  HANDYNOTE_SERVICE_API: 'http://localhost:3000/api',
+  maxUploadPicSize: 600 // picture length or width exceed maxUploadPicSize will be resized
 }
