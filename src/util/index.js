@@ -103,7 +103,7 @@ export const getResizedImgData = async (origImgData) => {
     resizedCanvas.height = resizedHeight
 
     let result = await pica.resize(origImgObj, resizedCanvas)
-    ret = result.toDataURL()
+    ret = result.toDataURL('image/jpeg')
   }
 
   return ret
