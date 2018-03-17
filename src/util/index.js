@@ -61,6 +61,9 @@ export const prepareFolderData = (folderData, folderStatisticsData) => {
     })
   }
 
+  // set type for root folder
+  itemMap.get(rootItem.id).type = 0
+
   return [itemMap.get(rootItem.id)]
 }
 

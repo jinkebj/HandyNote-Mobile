@@ -1,5 +1,5 @@
 import Dexie from 'dexie'
-import {prepareFolderData} from '@/util'
+import {getCurUsrRootFolderId, getCurUsrRootFolderName, prepareFolderData} from '@/util'
 
 const LocalData = {}
 const db = new Dexie('HandyNote')
@@ -86,12 +86,21 @@ LocalData.deleteNote = async (id) => {
 
 LocalData.getFolderTreeData = async (params) => {
   let foldersData = await db.folders.toCollection().sortBy('name')
+  let rootFolder = {
+    type: 0,
+    _id: getCurUsrRootFolderId(),
+    name: getCurUsrRootFolderName(),
+    ancestor_ids: []
+  }
+  foldersData.unshift(rootFolder)
+
   // let folderStatisticsData = (await http.get(BaseAPIUrl + '/folders/statistics', params)).data
   let folderStatisticsData = []
   for (let folderData of foldersData) {
     let noteCount = await db.notes.where('folder_id').equals(folderData._id).count()
     folderStatisticsData.push({_id: folderData._id, count: noteCount})
   }
+
   let retData = prepareFolderData(foldersData, folderStatisticsData)
   return { data: retData }
 }
