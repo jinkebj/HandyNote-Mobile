@@ -1,4 +1,5 @@
-import Pica from 'pica'
+// import Pica from 'pica'
+import Pica from './../../node_modules/pica/dist/pica.min'
 import {maxUploadPicSize} from '@/../config'
 export * from '@/util/filters'
 
