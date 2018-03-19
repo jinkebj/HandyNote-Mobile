@@ -5,7 +5,7 @@ const RemoteData = {}
 const BaseAPIUrl = process.env.HANDYNOTE_SERVICE_API || HANDYNOTE_SERVICE_API
 
 RemoteData.getStaticUrl = () => {
-  return BaseAPIUrl + '/handynote-static'
+  return BaseAPIUrl + '/images'
 }
 
 RemoteData.getHttpPrototype = () => {
