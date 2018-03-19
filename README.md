@@ -16,10 +16,10 @@ npm install
 
 # Optional, set HANDYNOTE_WEB_PORT & HANDYNOTE_SERVICE_API
 # if not set, will use HANDYNOTE_WEB_PORT=9081, HANDYNOTE_SERVICE_API=http://localhost:3000/api
-export HANDYNOTE_WEB_PORT={portnum}
+export HANDYNOTE_WEB_PORT={portnum} # only apply for debug mode
 export HANDYNOTE_SERVICE_API=http://IP:Port/api
 
-# serve with hot reload at localhost:9081
+# run in debug mode with hot reload
 npm run dev
 
 # build for production with minification
