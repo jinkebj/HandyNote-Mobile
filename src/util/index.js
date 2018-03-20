@@ -113,6 +113,8 @@ export const getResizedImgData = async (origImgData) => {
   return ret
 }
 
+export const HANDYNOTE_PROTOCOL = 'handynote://'
+
 export const getCurUsrId = () => { return window.localStorage.getItem('hn-user') }
 
 export const getCurUsrRootFolderId = () => { return window.localStorage.getItem('hn-user') + '-Root' }
