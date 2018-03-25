@@ -17,6 +17,10 @@ import * as filters from '@/util/filters'
 
 Vue.config.productionTip = false
 
+// define global event bus
+const EventBus = new Vue()
+Vue.prototype.$bus = EventBus
+
 // register filters
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

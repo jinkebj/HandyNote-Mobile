@@ -115,6 +115,10 @@ export default {
   mounted () {
     this.loadFolderList()
     this.trigger = this.$el
+
+    this.$bus.$on('syncFinished', () => {
+      this.refresh()
+    })
   },
 
   methods: {

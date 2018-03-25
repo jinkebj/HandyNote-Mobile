@@ -26,7 +26,10 @@ export default {
   methods: {
     syncData () {
       this.syncFlag = true
-      Model.sync().then(response => { this.syncFlag = false })
+      Model.sync().then(response => {
+        this.$bus.$emit('syncFinished')
+        this.syncFlag = false
+      })
     }
   }
 }

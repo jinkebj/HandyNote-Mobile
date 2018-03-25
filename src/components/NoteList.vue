@@ -104,6 +104,10 @@ export default {
     this.loadNoteList(0)
     this.trigger = this.$el
     this.scroller = this.$el
+
+    this.$bus.$on('syncFinished', () => {
+      this.refresh()
+    })
   },
 
   methods: {
