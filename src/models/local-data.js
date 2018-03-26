@@ -12,6 +12,10 @@ db.version(1).stores({
 
 LocalData.clear = async () => {
   await db.notes.clear()
+  await LocalData.clearFolder()
+}
+
+LocalData.clearFolder = async () => {
   await db.folders.clear()
 }
 
@@ -86,6 +90,13 @@ LocalData.deleteNote = async (id) => {
 
 LocalData.getFolderTreeData = async (params) => {
   let foldersData = await db.folders.toCollection().sortBy('name')
+
+  // handle exclude_id for move folder
+  if (params !== undefined && params !== null && params.exclude_id !== undefined) {
+    foldersData = foldersData.filter(
+      foldersData => foldersData.ancestor_ids.toString().indexOf(params.exclude_id) < 0 && foldersData._id !== params.exclude_id)
+  }
+
   let rootFolder = {
     type: 0,
     _id: getCurUsrRootFolderId(),

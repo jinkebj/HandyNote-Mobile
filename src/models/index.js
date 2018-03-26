@@ -68,7 +68,12 @@ Model.getFolder = (id) => {
 
 Model.updateFolder = async (id, params) => {
   let ret = await RemoteData.updateFolder(id, params)
-  await LocalData.updateFolder(id, params)
+  await LocalData.updateFolder(id, ret.data)
+  if (params.parent_id !== undefined) {
+    let foldersData = (await RemoteData.getFolderList()).data
+    await LocalData.clearFolder()
+    await LocalData.addFolderDataBatch(foldersData)
+  }
   return ret
 }
 
