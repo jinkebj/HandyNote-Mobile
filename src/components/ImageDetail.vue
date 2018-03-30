@@ -18,12 +18,16 @@
       <mu-flat-button slot="actions" @click="showSaveConfirm=false" primary label="No"/>
       <mu-flat-button slot="actions" primary @click="crop" label="Yes"/>
     </mu-dialog>
+
+    <mu-popup position="top" popupClass="popup-top" :open="saveingFlag">
+      Save data to server ...
+    </mu-popup>
   </div>
 </template>
 
 <style>
 .image-toolbar .material-icons {
-  color: #7E57C2;
+  color: #FFFFFF;
 }
 </style>
 
@@ -35,6 +39,7 @@
 }
 
 .image-wrapper {
+  background: #424242;
   display: flex;
   flex-flow: column;
   justify-content: center;
@@ -58,6 +63,7 @@ export default {
   data () {
     return {
       showSaveConfirm: false,
+      saveingFlag: false,
       cropper: null,
       dragMode: 'move',
       cropBoxData: null
@@ -93,6 +99,7 @@ export default {
 
       this.cropper = new Cropper(this.$refs.image, {
         autoCrop: false,
+        background: false,
         dragMode: this.dragMode
       })
     },
@@ -123,16 +130,19 @@ export default {
 
     crop () {
       let self = this
+      self.saveingFlag = true
       self.cropBoxData = this.cropper.getCroppedCanvas().toDataURL('image/jpeg')
       Model.updateImage(self.getImgId, {
         data: self.cropBoxData
       })
         .then(function (response) {
           self.stop()
+          self.saveingFlag = true
           self.$router.back()
         })
         .catch(function (error) {
           console.log(error)
+          self.saveingFlag = true
         })
     }
   }

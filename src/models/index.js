@@ -54,7 +54,7 @@ Model.deleteNote = async (id) => {
 
 Model.updateImage = async (id, params) => {
   let ret = await RemoteData.updateImage(id, params)
-  await LocalData.updateNote(ret.data.note_id, {updated_at: new Date()})
+  await LocalData.updateNote(ret.data.note_id, {updated_at: ret.data.updated_at})
   return ret
 }
 
