@@ -1,27 +1,39 @@
 <template>
   <div class="image-container">
-    <!-- <mu-appbar>
-      <mu-icon-button icon="arrow_back" slot="left" @click="$router.back()" />
-
-      <mu-icon-menu slot="right" icon="more_vert">
-        <mu-menu-item title="Rotate" @click="rotateRight" />
-        <mu-menu-item title="Corp" @click="enterCrop" />
-      </mu-icon-menu>
-    </mu-appbar> -->
+    <div class="image-toolbar">
+      <mu-icon-button icon="arrow_back" @click="$router.back()" />
+      <mu-icon-button icon="rotate_left" @click="rotateLeft" />
+      <mu-icon-button icon="rotate_right" @click="rotateRight" />
+      <mu-icon-button icon="crop" v-show="isHandyNoteProtocol && dragMode!=='crop'" @click="enterCrop" />
+      <mu-icon-button icon="highlight_off" v-show="dragMode==='crop'" @click="exitCrop" />
+      <mu-icon-button icon="save" v-show="isHandyNoteProtocol" @click="showSaveConfirm=true" />
+    </div>
 
     <div class="image-wrapper">
       <img ref="image" :src="imgSrc" @load="start">
     </div>
+
+    <mu-dialog :open="showSaveConfirm" title="Please Confirm">
+      Update image? This action can NOT be undone!
+      <mu-flat-button slot="actions" @click="showSaveConfirm=false" primary label="No"/>
+      <mu-flat-button slot="actions" primary @click="crop" label="Yes"/>
+    </mu-dialog>
   </div>
 </template>
 
 <style>
-/*.image-container .mu-appbar {
-  background-color: rgba(33, 150, 243, 0.2)
-}*/
+.image-toolbar .material-icons {
+  color: #7E57C2;
+}
 </style>
 
 <style scoped>
+.image-toolbar {
+  position: absolute;
+  top: 0px;
+  z-index: 8888;
+}
+
 .image-wrapper {
   display: flex;
   flex-flow: column;
@@ -45,8 +57,8 @@ export default {
 
   data () {
     return {
+      showSaveConfirm: false,
       cropper: null,
-      editMode: false,
       dragMode: 'move',
       cropBoxData: null
     }
@@ -77,7 +89,6 @@ export default {
     },
 
     start () {
-      this.editMode = true
       if (this.cropper !== null) this.cropper.destroy()
 
       this.cropper = new Cropper(this.$refs.image, {
@@ -87,9 +98,12 @@ export default {
     },
 
     stop () {
-      this.editMode = false
       this.dragMode = 'move'
       if (this.cropper !== null) this.cropper.destroy()
+    },
+
+    rotateLeft () {
+      this.cropper.rotate(-90)
     },
 
     rotateRight () {
@@ -109,28 +123,17 @@ export default {
 
     crop () {
       let self = this
-      self.$confirm('Update image? This action can NOT be undone!', 'Please Confirm', {
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
-        type: 'warning'
-      }).then(() => {
-        self.cropBoxData = this.cropper.getCroppedCanvas().toDataURL('image/jpeg')
-        Model.updateImage(self.getImgId, {
-          data: self.cropBoxData
-        })
-          .then(function (response) {
-            self.stop()
-            self.$emit('updateImage')
-            self.$message({
-              message: 'Image update successfully!',
-              type: 'success'
-            })
-          })
-          .catch(function (error) {
-            console.log(error)
-            self.$message.error('Image update failed!')
-          })
+      self.cropBoxData = this.cropper.getCroppedCanvas().toDataURL('image/jpeg')
+      Model.updateImage(self.getImgId, {
+        data: self.cropBoxData
       })
+        .then(function (response) {
+          self.stop()
+          self.$router.back()
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   }
 }

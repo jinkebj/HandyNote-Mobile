@@ -36,6 +36,10 @@ RemoteData.deleteNote = (id) => {
   return http.delete(BaseAPIUrl + '/notes/' + id)
 }
 
+RemoteData.updateImage = (id, params) => {
+  return http.post(BaseAPIUrl + '/images/' + id, params)
+}
+
 RemoteData.getFolderTreeData = (params) => {
   return http.get(BaseAPIUrl + '/folders/tree-info', { params: params })
 }

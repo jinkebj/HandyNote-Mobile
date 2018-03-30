@@ -52,6 +52,12 @@ Model.deleteNote = async (id) => {
   return ret
 }
 
+Model.updateImage = async (id, params) => {
+  let ret = await RemoteData.updateImage(id, params)
+  await LocalData.updateNote(ret.data.note_id, {updated_at: new Date()})
+  return ret
+}
+
 Model.getFolderTreeData = (params) => {
   return LocalData.getFolderTreeData(params)
 }
