@@ -6,7 +6,7 @@
       <mu-list-item class="list-item-divider" v-for="listItem in listItems" :key="listItem._id">
         <div @click="$router.push('/notes/' + listItem._id)">
           <div class="list-item-name">{{listItem.name | truncate(35)}}</div>
-          <div class="list-item-digest">{{listItem.digest | truncate(70)}}</div>
+          <div class="list-item-digest">{{(listItem.digest.trim().length === 0 ? listItem.name : listItem.digest) | truncate(70)}}</div>
           <div class="list-item-info">
             <div class="list-item-star-icon" v-show="listItem.starred === 1">
               <mu-icon value="star" color="orange" :size="20" />

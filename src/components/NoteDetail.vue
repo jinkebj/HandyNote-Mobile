@@ -155,6 +155,7 @@ import {HANDYNOTE_PROTOCOL, getResizedImgData} from '@/util'
 import Model from '@/models'
 import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
+import { ImageHandler } from '@/quill_modules/ImageHandler'
 
 export default {
   props: ['id'],
@@ -172,16 +173,24 @@ export default {
   },
 
   mounted () {
-    // const self = this
+    Quill.register('modules/imageHandler', ImageHandler)
+
     this.quill = new Quill('#note-editor', {
       readOnly: true,
       modules: {
-        toolbar: '#note-toolbar'
+        toolbar: '#note-toolbar',
+        imageHandler: {
+          eventBus: this.$bus
+        }
       },
       theme: 'snow'
     })
 
     this.loadNote()
+
+    this.$bus.$on('showImgDetail', (url) => {
+      this.$router.push({path: '/image-detail', query: {imgSrc: url}})
+    })
   },
 
   methods: {
@@ -217,7 +226,9 @@ export default {
           op.insert.image.startsWith(HANDYNOTE_PROTOCOL)) {
           op.insert.image = op.insert.image.replace(HANDYNOTE_PROTOCOL, '')
           op.insert.image = Model.getStaticUrl() + '/' + op.insert.image +
-            '?certId=' + window.localStorage.getItem('hn-token')
+            '?certId=' + window.localStorage.getItem('hn-token') +
+            // to force browser reload image when note got updated
+            '&time=' + this.noteItem.updated_at
         }
       }
       return contentsJson

@@ -10,6 +10,7 @@ import NoteDetail from '@/components/NoteDetail'
 import FolderDetail from '@/components/FolderDetail'
 import TrashList from '@/components/TrashList'
 import FolderSelect from '@/components/FolderSelect'
+import ImageDetail from '@/components/ImageDetail'
 
 Vue.use(Router)
 
@@ -36,6 +37,11 @@ export default new Router({
       path: '/folder-select',
       component: FolderSelect,
       props: (route) => ({srcType: route.query.srcType, srcId: route.query.srcId})
+    },
+    {
+      path: '/image-detail',
+      component: ImageDetail,
+      props: (route) => ({imgSrc: route.query.imgSrc})
     },
     {
       path: '/favorites',
