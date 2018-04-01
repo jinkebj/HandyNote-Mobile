@@ -6,6 +6,7 @@
       <mu-icon-button icon="rotate_right" @click="rotateRight" />
       <mu-icon-button icon="crop" v-show="isHandyNoteProtocol && dragMode!=='crop'" @click="enterCrop" />
       <mu-icon-button icon="highlight_off" v-show="dragMode==='crop'" @click="exitCrop" />
+      <mu-icon-button icon="get_app" :href="imgSrc" />
       <mu-icon-button icon="save" v-show="isHandyNoteProtocol" @click="showSaveConfirm=true" />
     </div>
 
@@ -66,7 +67,8 @@ export default {
       saveingFlag: false,
       cropper: null,
       dragMode: 'move',
-      cropBoxData: null
+      cropBoxData: null,
+      zoomChecker: null
     }
   },
 
@@ -87,6 +89,14 @@ export default {
   },
 
   mounted () {
+    let self = this
+    self.zoomChecker = function (event) {
+      if (event.detail.ratio > 5 || event.detail.ratio < 0.2) {
+        event.preventDefault() // Prevent zoom in / zoom out
+      } else {
+        self.zoomFactor = event.detail.ratio * 100
+      }
+    }
   },
 
   methods: {
@@ -97,6 +107,7 @@ export default {
     start () {
       if (this.cropper !== null) this.cropper.destroy()
 
+      this.$refs.image.addEventListener('zoom', this.zoomChecker)
       this.cropper = new Cropper(this.$refs.image, {
         autoCrop: false,
         background: false,
@@ -107,6 +118,7 @@ export default {
     stop () {
       this.dragMode = 'move'
       if (this.cropper !== null) this.cropper.destroy()
+      this.$refs.image.removeEventListener('zoom', this.zoomChecker)
     },
 
     rotateLeft () {
