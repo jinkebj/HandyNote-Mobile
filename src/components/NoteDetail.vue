@@ -309,7 +309,9 @@ export default {
       const self = this
       self.showCancelConfirm = false
       self.noteItem.name = self.originNoteName
-      self.quill.setContents(JSON.parse(self.noteItem.contents))
+      let contentsJson = (typeof self.noteItem.contents === 'object' ? self.noteItem.contents
+        : JSON.parse(self.noteItem.contents))
+      self.quill.setContents(self.handleImgUrl(contentsJson))
       self.toggleeditMode()
     },
 
