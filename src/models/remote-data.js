@@ -16,6 +16,10 @@ RemoteData.login = (params) => {
   return http.post(BaseAPIUrl + '/tokens/', params)
 }
 
+RemoteData.getProfile = () => {
+  return http.get(BaseAPIUrl + '/profiles/')
+}
+
 RemoteData.getNoteList = (params) => {
   return http.get(BaseAPIUrl + '/notes', { params: params })
 }

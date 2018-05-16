@@ -1,17 +1,32 @@
+import {getCurUsrLocalUsn} from '@/util'
 import LocalData from '@/models/local-data'
 import RemoteData from '@/models/remote-data'
 
 const Model = {}
 
-// clean data & execute full sync
+// execute delta sync
 Model.sync = async () => {
-  await LocalData.clear()
+  let localUsn = getCurUsrLocalUsn()
+  let remoteUsn = (await RemoteData.getProfile()).data.latestUsn
+  if (Number.parseInt(localUsn) === Number.parseInt(remoteUsn)) {
+    console.log('no delta change!')
+    return
+  } else if (Number.parseInt(localUsn) > Number.parseInt(remoteUsn)) { // should never happen
+    localUsn = 0
+  }
 
-  let notesData = (await RemoteData.getNoteList({fields: 'all'})).data
+  let notesData = (await RemoteData.getNoteList({fields: 'all', skip_usn: localUsn})).data
   await LocalData.addNoteDataBatch(notesData)
 
-  let foldersData = (await RemoteData.getFolderList()).data
+  let foldersData = (await RemoteData.getFolderList({skip_usn: localUsn})).data
   await LocalData.addFolderDataBatch(foldersData)
+
+  window.localStorage.setItem('hn-local-usn', remoteUsn)
+}
+
+Model.clearLocalData = async () => {
+  window.localStorage.removeItem('hn-local-usn')
+  await LocalData.clear()
 }
 
 Model.getStaticUrl = () => {

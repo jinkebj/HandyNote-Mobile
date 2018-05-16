@@ -61,7 +61,6 @@ export default {
   methods: {
     logout () {
       window.localStorage.removeItem('hn-token')
-      window.localStorage.removeItem('hn-user')
       this.$router.replace('/login')
     }
   }

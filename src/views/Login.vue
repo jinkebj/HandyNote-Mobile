@@ -46,14 +46,22 @@ export default {
         usr: this.usr,
         pwd: this.pwd
       })
-        .then(function (response) {
+        .then(async function (response) {
           if (response.status === 200) {
             window.localStorage.setItem('hn-token', response.data._id)
-            window.localStorage.setItem('hn-user', response.data.user_id)
+
+            // switch user, clear local storage
+            if (window.localStorage.getItem('hn-user') !== response.data.user_id) {
+              window.localStorage.setItem('hn-user', response.data.user_id)
+              await Model.clearLocalData()
+            }
+
+            // execute delta sync
+            await Model.sync()
+            self.$bus.$emit('syncFinished')
+
             self.$router.replace('/recents')
           } else {
-            window.localStorage.removeItem('hn-token')
-            window.localStorage.removeItem('hn-user')
             self.errFlag = true
           }
         })

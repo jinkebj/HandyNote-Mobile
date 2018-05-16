@@ -126,3 +126,5 @@ export const getCurUsrRecentFolderId = () => { return window.localStorage.getIte
 export const getCurUsrStarFolderId = () => { return window.localStorage.getItem('hn-user') + '-Starred' }
 
 export const getCurUsrTrashFolderId = () => { return window.localStorage.getItem('hn-user') + '-Trash' }
+
+export const getCurUsrLocalUsn = () => { return window.localStorage.getItem('hn-local-usn') || 0 }
