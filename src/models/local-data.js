@@ -35,7 +35,7 @@ LocalData.addFolderDataBatch = async (foldersData) => {
 }
 
 LocalData.getAllNoteIds = async () => {
-  return await db.notes.toCollection().uniqueKeys()
+  return await db.notes.toCollection().primaryKeys()
 }
 
 LocalData.getNoteList = async (params) => {
@@ -93,7 +93,7 @@ LocalData.deleteNote = async (id) => {
 }
 
 LocalData.getAllFolderIds = async () => {
-  return await db.folders.toCollection().uniqueKeys()
+  return await db.folders.toCollection().primaryKeys()
 }
 
 LocalData.getFolderTreeData = async (params) => {
