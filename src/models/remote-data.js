@@ -20,6 +20,15 @@ RemoteData.getProfile = () => {
   return http.get(BaseAPIUrl + '/profiles/')
 }
 
+RemoteData.getNotExistNoteIds = (idsStr) => {
+  return http.post(BaseAPIUrl + '/notes/action',
+    {
+      action: 'filter_non_exist',
+      ids: idsStr
+    }
+  )
+}
+
 RemoteData.getNoteList = (params) => {
   return http.get(BaseAPIUrl + '/notes', { params: params })
 }
@@ -42,6 +51,15 @@ RemoteData.deleteNote = (id) => {
 
 RemoteData.updateImage = (id, params) => {
   return http.post(BaseAPIUrl + '/images/' + id, params)
+}
+
+RemoteData.getNotExistFolderIds = (idsStr) => {
+  return http.post(BaseAPIUrl + '/folders/action',
+    {
+      action: 'filter_non_exist',
+      ids: idsStr
+    }
+  )
 }
 
 RemoteData.getFolderTreeData = (params) => {

@@ -34,6 +34,10 @@ LocalData.addFolderDataBatch = async (foldersData) => {
   }
 }
 
+LocalData.getAllNoteIds = async () => {
+  return await db.notes.toCollection().uniqueKeys()
+}
+
 LocalData.getNoteList = async (params) => {
   let skip = -1
   if (params.skip !== undefined && typeof params.skip === 'number') {
@@ -88,6 +92,10 @@ LocalData.deleteNote = async (id) => {
   return await db.notes.delete(id)
 }
 
+LocalData.getAllFolderIds = async () => {
+  return await db.folders.toCollection().uniqueKeys()
+}
+
 LocalData.getFolderTreeData = async (params) => {
   let foldersData = await db.folders.toCollection().sortBy('name')
 
@@ -137,6 +145,10 @@ LocalData.updateFolder = async (id, params) => {
 
 LocalData.deleteFolder = async (id) => {
   await db.notes.where({folder_id: id}).delete()
+  return await db.folders.delete(id)
+}
+
+LocalData.deleteFolderOnly = async (id) => {
   return await db.folders.delete(id)
 }
 

@@ -6,6 +6,7 @@ const Model = {}
 
 // execute delta sync
 Model.sync = async () => {
+  // compare local usn with remote usn
   let localUsn = getCurUsrLocalUsn()
   let remoteUsn = (await RemoteData.getProfile()).data.latestUsn
   if (Number.parseInt(localUsn) === Number.parseInt(remoteUsn)) {
@@ -15,12 +16,29 @@ Model.sync = async () => {
     localUsn = 0
   }
 
+  // delete non-exist notes from local data
+  let localNoteIds = (await LocalData.getAllNoteIds()).join(',')
+  let nonExistNoteIds = (await RemoteData.getNotExistNoteIds(localNoteIds)).data
+  for (let nonExistNoteId of nonExistNoteIds) {
+    await LocalData.deleteNote(nonExistNoteId)
+  }
+
+  // delete non-exist folders from local data
+  let localFolderIds = (await LocalData.getAllFolderIds()).join(',')
+  let nonExistFolderIds = (await RemoteData.getNotExistFolderIds(localFolderIds)).data
+  for (let nonExistFolderId of nonExistFolderIds) {
+    await LocalData.deleteFolderOnly(nonExistFolderId)
+  }
+
+  // update local note data
   let notesData = (await RemoteData.getNoteList({fields: 'all', skip_usn: localUsn})).data
   await LocalData.addNoteDataBatch(notesData)
 
+  // update local folder data
   let foldersData = (await RemoteData.getFolderList({skip_usn: localUsn})).data
   await LocalData.addFolderDataBatch(foldersData)
 
+  // update local usn
   window.localStorage.setItem('hn-local-usn', remoteUsn)
 }
 
@@ -108,8 +126,10 @@ Model.getTrash = () => {
   return RemoteData.getTrash()
 }
 
-Model.emptyTrash = () => {
-  return RemoteData.emptyTrash()
+Model.emptyTrash = async () => {
+  let ret = RemoteData.emptyTrash()
+  await Model.sync()
+  return ret
 }
 
 Model.revertTrash = async () => {
@@ -118,8 +138,10 @@ Model.revertTrash = async () => {
   return ret
 }
 
-Model.deleteTrash = (id) => {
-  return RemoteData.deleteTrash(id)
+Model.deleteTrash = async (id) => {
+  let ret = RemoteData.deleteTrash(id)
+  await Model.sync()
+  return ret
 }
 
 Model.restoreTrash = async (id) => {
