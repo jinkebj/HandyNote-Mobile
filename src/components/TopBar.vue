@@ -10,7 +10,17 @@
   </div>
 </template>
 
-<style scoped>
+<style>
+.popup-top {
+  font-size: 16px;
+  width: 100vw;
+  color: #FFFFFF;
+  background: #2196F3;
+  height: 56px;
+  line-height: 56px;
+  display: flex;
+  justify-content: center;
+}
 </style>
 
 <script>

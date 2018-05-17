@@ -5,8 +5,8 @@
 <style scoped>
 .note-float-button {
   position: fixed;
-  bottom: 70px;
-  right: 20px;
+  bottom: 60px;
+  right: 15px;
   z-index: 999;
 }
 

@@ -5,31 +5,11 @@
     <mu-list class="note-folder-container">
       <folder-item :noteFolder="noteFolders[0]" @refreshFolderList="loadFolderList"></folder-item>
 
-      <mu-list-item>
+      <mu-list-item @click="$router.push('/trash')">
         <mu-icon slot="left" value="delete"/>
-        <div slot="title" class="note-top-folder" @click="$router.push('/trash')">Trash</div>
-        <mu-icon-menu slot="after" icon="more_vert">
-          <mu-menu-item title="Empty Trash" @click="showEmptyTrashConfirm=true" />
-          <mu-menu-item title="Restore All" @click="showRevertTrashConfirm=true" />
-        </mu-icon-menu>
+        <div slot="title" class="note-top-folder">Trash</div>
       </mu-list-item>
     </mu-list>
-
-    <mu-popup position="top" popupClass="popup-top" :open="emptyTrashPopup">
-      Empty trash successfully!
-    </mu-popup>
-
-    <mu-dialog :open="showEmptyTrashConfirm" title="Please Confirm">
-      Permanently delete all items in trash? This action can NOT be undone!
-      <mu-flat-button slot="actions" @click="showEmptyTrashConfirm=false" primary label="No"/>
-      <mu-flat-button slot="actions" primary @click="emptyTrash" label="Yes"/>
-    </mu-dialog>
-
-    <mu-dialog :open="showRevertTrashConfirm" title="Please Confirm">
-      Restore all items in trash?
-      <mu-flat-button slot="actions" @click="showRevertTrashConfirm=false" primary label="No"/>
-      <mu-flat-button slot="actions" primary @click="revertTrash" label="Yes"/>
-    </mu-dialog>
   </div>
 </template>
 
@@ -42,17 +22,6 @@
 
 .note-folder-container .mu-item.show-left {
   padding-left: 50px;
-}
-
-.popup-top {
-  font-size: 16px;
-  width: 100vw;
-  color: #FFFFFF;
-  background: #2196F3;
-  height: 56px;
-  line-height: 56px;
-  display: flex;
-  justify-content: center;
 }
 </style>
 
@@ -95,20 +64,7 @@ export default {
         }
       ],
       refreshing: false,
-      trigger: null,
-      emptyTrashPopup: false,
-      showEmptyTrashConfirm: false,
-      showRevertTrashConfirm: false
-    }
-  },
-
-  watch: {
-    emptyTrashPopup (val) {
-      if (val) {
-        setTimeout(() => {
-          this.emptyTrashPopup = false
-        }, 2000)
-      }
+      trigger: null
     }
   },
 
@@ -137,30 +93,6 @@ export default {
     refresh () {
       this.refreshing = true
       this.loadFolderList()
-    },
-
-    emptyTrash () {
-      const self = this
-      Model.emptyTrash()
-        .then(function (response) {
-          self.emptyTrashPopup = true
-          self.showEmptyTrashConfirm = false
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-    },
-
-    revertTrash () {
-      const self = this
-      Model.revertTrash()
-        .then(function (response) {
-          self.loadFolderList()
-          self.showRevertTrashConfirm = false
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
     }
   }
 }

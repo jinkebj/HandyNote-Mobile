@@ -2,6 +2,10 @@
   <div class="page">
     <mu-appbar title="Trash">
       <mu-icon-button icon="arrow_back" slot="left" @click="$router.back()" />
+      <mu-icon-menu slot="right" icon="more_vert" v-show="listItems.length > 0">
+        <mu-menu-item title="Empty Trash" @click="showEmptyTrashConfirm=true" />
+        <mu-menu-item title="Restore All" @click="showRevertTrashConfirm=true" />
+      </mu-icon-menu>
     </mu-appbar>
 
     <div class="page-content">
@@ -25,6 +29,22 @@
       </mu-list>
 
       <mu-circular-progress class="loading-indicator" :size="40" v-show="loadingFlag" />
+
+      <mu-popup position="top" popupClass="popup-top" :open="popupFlag">
+        {{popupHint}}
+      </mu-popup>
+
+      <mu-dialog :open="showEmptyTrashConfirm" title="Please Confirm">
+        Permanently delete all items in trash? This action can NOT be undone!
+        <mu-flat-button slot="actions" @click="showEmptyTrashConfirm=false" primary label="No"/>
+        <mu-flat-button slot="actions" primary @click="emptyTrash" label="Yes"/>
+      </mu-dialog>
+
+      <mu-dialog :open="showRevertTrashConfirm" title="Please Confirm">
+        Restore all items in trash?
+        <mu-flat-button slot="actions" @click="showRevertTrashConfirm=false" primary label="No"/>
+        <mu-flat-button slot="actions" primary @click="revertTrash" label="Yes"/>
+      </mu-dialog>
 
       <mu-dialog :open="showDeleteConfirm" title="Please Confirm">
         Permanently delete this item? This action can NOT be undone!
@@ -87,7 +107,21 @@ export default {
       selectedItem: {},
       refreshing: false,
       trigger: null,
-      listItems: []
+      listItems: [],
+      popupFlag: false,
+      popupHint: '',
+      showEmptyTrashConfirm: false,
+      showRevertTrashConfirm: false
+    }
+  },
+
+  watch: {
+    popupFlag (val) {
+      if (val) {
+        setTimeout(() => {
+          this.popupFlag = false
+        }, 2000)
+      }
     }
   },
 
@@ -131,9 +165,14 @@ export default {
 
     restoreItem (itemId) {
       const self = this
+      self.loadingFlag = true
+
       Model.restoreTrash(itemId)
         .then(function (response) {
           self.refresh()
+          self.loadingFlag = false
+          self.popupHint = 'Restore selected item successfully!'
+          self.popupFlag = true
         })
         .catch(function (error) {
           console.log(error)
@@ -143,6 +182,37 @@ export default {
     refresh () {
       this.refreshing = true
       this.loadTrashList()
+    },
+
+    emptyTrash () {
+      const self = this
+      Model.emptyTrash()
+        .then(function (response) {
+          self.popupHint = 'Empty trash successfully!'
+          self.popupFlag = true
+          self.showEmptyTrashConfirm = false
+          self.refresh()
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    revertTrash () {
+      const self = this
+      self.loadingFlag = true
+
+      Model.revertTrash()
+        .then(function (response) {
+          self.showRevertTrashConfirm = false
+          self.refresh()
+          self.loadingFlag = false
+          self.popupHint = 'Restore trash successfully!'
+          self.popupFlag = true
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   }
 }

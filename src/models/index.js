@@ -112,16 +112,20 @@ Model.emptyTrash = () => {
   return RemoteData.emptyTrash()
 }
 
-Model.revertTrash = () => {
-  return RemoteData.revertTrash()
+Model.revertTrash = async () => {
+  let ret = await RemoteData.revertTrash()
+  await Model.sync()
+  return ret
 }
 
 Model.deleteTrash = (id) => {
   return RemoteData.deleteTrash(id)
 }
 
-Model.restoreTrash = (id) => {
-  return RemoteData.restoreTrash(id)
+Model.restoreTrash = async (id) => {
+  let ret = RemoteData.restoreTrash(id)
+  await Model.sync()
+  return ret
 }
 
 export default Model
