@@ -6,13 +6,21 @@
     <div class="login-box">
       <mu-text-field label="User Name" labelFloat fullWidth v-model="usr" />
       <mu-text-field label="Password" type="password" labelFloat fullWidth v-model="pwd" />
-      <mu-raised-button label="Login" primary @click="doLogin" />
+      <mu-raised-button label="Login" primary :disabled="loadingFlag" @click="doLogin" />
       <span class="login-err" v-show="errFlag">Invalid user name or password, login failed!</span>
     </div>
+
+    <mu-circular-progress class="loading-indicator" :size="40" v-show="loadingFlag" />
   </div>
 </template>
 
 <style scoped>
+.loading-indicator {
+  position: fixed;
+  top: calc(100vh / 2 - 20px);
+  left: calc(100vw / 2 - 20px);
+}
+
 .login-box {
   margin: 30px;
   display: flex;
@@ -34,13 +42,15 @@ export default {
     return {
       usr: '',
       pwd: '',
-      errFlag: false
+      errFlag: false,
+      loadingFlag: false
     }
   },
 
   methods: {
     doLogin () {
       const self = this
+      self.loadingFlag = true
 
       Model.login({
         usr: this.usr,
@@ -59,10 +69,12 @@ export default {
             // execute delta sync
             await Model.sync()
             self.$bus.$emit('syncFinished')
+            self.loadingFlag = false
 
             self.$router.replace('/recents')
           } else {
             self.errFlag = true
+            self.loadingFlag = false
           }
         })
         .catch(function (error) {
