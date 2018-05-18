@@ -57,3 +57,8 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
+
+// redirect to login page if no token cached in local storage
+if (window.localStorage.getItem('hn-token') === null) {
+  window.location.href = './index.html#/login'
+}
