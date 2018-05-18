@@ -4,7 +4,11 @@
 
 - [Screenshot & HandyNote overall info](https://github.com/jinkebj/HandyNote)
 
-## Build Setup & debug on browser
+## Software Requirements
+
+- [Node.js 8.x or above](https://nodejs.org)
+
+## Development Setup & debug on browser
 
 ``` bash
 # Optional, set npm mirror to speed up npm install in China
