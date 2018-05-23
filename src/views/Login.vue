@@ -16,12 +16,13 @@
     <mu-circular-progress class="loading-indicator" :size="40" v-show="loadingFlag" />
 
     <mu-dialog :open="showSwitchServerForm" title="Switch Server">
-      <div>Current: {{currentBaseAPIUrl}}</div>
+      <div>Current:</div>
+      <div class="base-url-box"> {{currentBaseAPIUrl}}</div>
       <div>New: <mu-text-field hintText="Input new URL" v-model="newBaseAPIUrl" /></div>
-      <mu-flat-button slot="actions" @click="showSwitchServerForm=false" primary label="Cancel" />
-      <mu-flat-button slot="actions"  @click="resetBaseAPIUrl" primary label="Reset" />
-      <mu-flat-button slot="actions" @click="switchBaseAPIUrl" primary label="Switch" />
-      <span class="login-err" v-show="switchServerErrFlag">Test failed, invalid HandyNote service URL!</span>
+      <mu-raised-button @click="resetBaseAPIUrl" primary mini label="Restore Defaults" />
+      <mu-flat-button slot="actions" @click="cancelSwitchBaseAPIUrl" primary mini label="Cancel" />
+      <mu-flat-button slot="actions" @click="switchBaseAPIUrl" primary mini label="Switch" />
+      <div class="login-err" v-show="switchServerErrFlag">Test failed, invalid HandyNote service URL!</div>
     </mu-dialog>
   </div>
 </template>
@@ -43,6 +44,12 @@
   color: red;
   text-align: center;
   padding-top: 15px;
+}
+
+.base-url-box {
+  font-size: 13px;
+  font-weight: bold;
+  padding-bottom: 15px;
 }
 </style>
 
@@ -100,9 +107,15 @@ export default {
         })
     },
 
+    cancelSwitchBaseAPIUrl () {
+      this.switchServerErrFlag = false
+      this.showSwitchServerForm = false
+    },
+
     resetBaseAPIUrl () {
       window.localStorage.removeItem('hn-base-api-url')
       this.currentBaseAPIUrl = getCurBaseAPIUrl()
+      this.switchServerErrFlag = false
       this.showSwitchServerForm = false
     },
 
