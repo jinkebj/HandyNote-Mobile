@@ -113,6 +113,10 @@ export const getResizedImgData = async (origImgData) => {
   return ret
 }
 
+export const getDefaultBaseAPIUrl = () => { return process.env.HANDYNOTE_SERVICE_API || 'http://localhost:3000/api' }
+
+export const getCurBaseAPIUrl = () => { return window.localStorage.getItem('hn-base-api-url') || getDefaultBaseAPIUrl() }
+
 export const HANDYNOTE_PROTOCOL = 'handynote://'
 
 export const getCurUsrId = () => { return window.localStorage.getItem('hn-user') }

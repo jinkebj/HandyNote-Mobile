@@ -47,6 +47,10 @@ Model.clearLocalData = async () => {
   await LocalData.clear()
 }
 
+Model.remoteTest = (baseUrl) => {
+  return RemoteData.test(baseUrl)
+}
+
 Model.getStaticUrl = () => {
   return RemoteData.getStaticUrl()
 }

@@ -1,6 +1,9 @@
 <template>
   <div>
     <mu-appbar title="Handy Note">
+      <mu-icon-menu slot="right" icon="more_vert">
+        <mu-menu-item title="Switch Server" @click="showSwitchServerForm=true" />
+      </mu-icon-menu>
     </mu-appbar>
 
     <div class="login-box">
@@ -11,6 +14,15 @@
     </div>
 
     <mu-circular-progress class="loading-indicator" :size="40" v-show="loadingFlag" />
+
+    <mu-dialog :open="showSwitchServerForm" title="Switch Server">
+      <div>Current: {{currentBaseAPIUrl}}</div>
+      <div>New: <mu-text-field hintText="Input new URL" v-model="newBaseAPIUrl" /></div>
+      <mu-flat-button slot="actions" @click="showSwitchServerForm=false" primary label="Cancel" />
+      <mu-flat-button slot="actions"  @click="resetBaseAPIUrl" primary label="Reset" />
+      <mu-flat-button slot="actions" @click="switchBaseAPIUrl" primary label="Switch" />
+      <span class="login-err" v-show="switchServerErrFlag">Test failed, invalid HandyNote service URL!</span>
+    </mu-dialog>
   </div>
 </template>
 
@@ -36,6 +48,7 @@
 
 <script>
 import Model from '@/models'
+import {getCurBaseAPIUrl} from '@/util'
 
 export default {
   data () {
@@ -43,7 +56,11 @@ export default {
       usr: '',
       pwd: '',
       errFlag: false,
-      loadingFlag: false
+      loadingFlag: false,
+      currentBaseAPIUrl: getCurBaseAPIUrl(),
+      newBaseAPIUrl: 'http://',
+      showSwitchServerForm: false,
+      switchServerErrFlag: false
     }
   },
 
@@ -80,6 +97,31 @@ export default {
         .catch(function (error) {
           console.log(error)
           self.errFlag = true
+        })
+    },
+
+    resetBaseAPIUrl () {
+      window.localStorage.removeItem('hn-base-api-url')
+      this.currentBaseAPIUrl = getCurBaseAPIUrl()
+      this.showSwitchServerForm = false
+    },
+
+    switchBaseAPIUrl () {
+      let self = this
+      Model.remoteTest(self.newBaseAPIUrl).then(
+        function (response) {
+          if (response.status === 200 && response.data.result === 'success') {
+            self.switchServerErrFlag = false
+            window.localStorage.setItem('hn-base-api-url', self.newBaseAPIUrl)
+            self.currentBaseAPIUrl = getCurBaseAPIUrl()
+            self.showSwitchServerForm = false
+          } else {
+            self.switchServerErrFlag = true
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+          self.switchServerErrFlag = true
         })
     }
   }
