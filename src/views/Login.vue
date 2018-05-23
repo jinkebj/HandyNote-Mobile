@@ -19,7 +19,7 @@
       <div>Current:</div>
       <div class="base-url-box"> {{currentBaseAPIUrl}}</div>
       <div>New: <mu-text-field hintText="Input new URL" v-model="newBaseAPIUrl" /></div>
-      <mu-raised-button @click="resetBaseAPIUrl" primary mini label="Restore Defaults" />
+      <mu-raised-button @click="resetBaseAPIUrl" primary mini label="Reset" />
       <mu-flat-button slot="actions" @click="cancelSwitchBaseAPIUrl" primary mini label="Cancel" />
       <mu-flat-button slot="actions" @click="switchBaseAPIUrl" primary mini label="Switch" />
       <div class="login-err" v-show="switchServerErrFlag">Test failed, invalid HandyNote service URL!</div>
