@@ -80,6 +80,17 @@
 
 </template>
 
+<style>
+.page .ql-snow .ql-editor pre.ql-syntax { /* to avoid black background of code block*/
+  background-color: rgb(240, 240, 240);
+  color: #171313;
+}
+
+.page-content .mu-text-field-content {
+  padding: 15px 0 0 0;
+}
+</style>
+
 <style scoped>
 .loading-indicator {
   position: fixed;
@@ -144,15 +155,11 @@
 }
 </style>
 
-<style>
-.page-content .mu-text-field-content {
-  padding: 15px 0 0 0;
-}
-</style>
-
 <script>
 import {HANDYNOTE_PROTOCOL, getResizedImgData} from '@/util'
 import Model from '@/models'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/atom-one-light.css'
 import 'quill/dist/quill.snow.css'
 import Quill from 'quill'
 import { ImageHandler } from '@/quill_modules/ImageHandler'
@@ -179,6 +186,9 @@ export default {
       readOnly: true,
       modules: {
         toolbar: '#note-toolbar',
+        syntax: {
+          highlight: text => hljs.highlightAuto(text).value
+        },
         imageHandler: {
           eventBus: this.$bus
         }
