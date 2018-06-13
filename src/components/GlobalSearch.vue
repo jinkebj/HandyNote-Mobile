@@ -13,6 +13,7 @@
 
 <style>
 .appbar-search-field {
+  width: calc(100vw - 120px);
   color: #FFF;
   margin-bottom: 0;
 }
