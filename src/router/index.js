@@ -11,6 +11,8 @@ import FolderDetail from '@/components/FolderDetail'
 import TrashList from '@/components/TrashList'
 import FolderSelect from '@/components/FolderSelect'
 import ImageDetail from '@/components/ImageDetail'
+import GlobalSearch from '@/components/GlobalSearch'
+import SearchResult from '@/components/SearchResult'
 
 Vue.use(Router)
 
@@ -59,6 +61,15 @@ export default new Router({
     {
       path: '/trash',
       component: TrashList
+    },
+    {
+      path: '/search',
+      component: GlobalSearch
+    },
+    {
+      path: '/search-result',
+      component: SearchResult,
+      props: (route) => ({searchStr: route.query.searchStr})
     },
     {
       path: '*',

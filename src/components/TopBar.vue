@@ -1,7 +1,7 @@
 <template>
   <div>
     <mu-appbar title="Handy Note">
-      <mu-icon-button icon="search" slot="right"/>
+      <mu-icon-button icon="search" slot="right" @click="$router.push({path: '/search'})" />
       <mu-icon-button icon="sync" slot="right" @click="syncData" />
     </mu-appbar>
     <mu-popup position="top" popupClass="popup-top" :open="syncFlag">

@@ -125,6 +125,8 @@ export const getCurUsrRootFolderId = () => { return window.localStorage.getItem(
 
 export const getCurUsrRootFolderName = () => { return 'My Folders' }
 
+export const getCurUsrSearchFolderId = () => { return window.localStorage.getItem('hn-user') + '-Search' }
+
 export const getCurUsrRecentFolderId = () => { return window.localStorage.getItem('hn-user') + '-Recent' }
 
 export const getCurUsrStarFolderId = () => { return window.localStorage.getItem('hn-user') + '-Starred' }

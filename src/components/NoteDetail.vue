@@ -77,7 +77,6 @@
       <mu-flat-button slot="actions" primary @click="cancelUpdateNote" label="Yes"/>
     </mu-dialog>
   </div>
-
 </template>
 
 <style>

@@ -10,7 +10,6 @@
       <my-note-list :folderId="id"></my-note-list>
     </div>
   </div>
-
 </template>
 
 <style scoped>

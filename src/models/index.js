@@ -64,7 +64,11 @@ Model.login = (params) => {
 }
 
 Model.getNoteList = (params) => {
-  return LocalData.getNoteList(params)
+  if (params.search !== undefined) {
+    return RemoteData.getNoteList(params)
+  } else {
+    return LocalData.getNoteList(params)
+  }
 }
 
 Model.addNote = async (params) => {

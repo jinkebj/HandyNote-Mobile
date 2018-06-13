@@ -78,12 +78,13 @@
 </style>
 
 <script>
-import {getCurUsrStarFolderId} from '@/util'
+import {getCurUsrStarFolderId, getCurUsrRecentFolderId, getCurUsrSearchFolderId} from '@/util'
 import Model from '@/models'
 
 export default {
   props: {
-    folderId: String
+    folderId: String,
+    searchStr: String
   },
 
   data () {
@@ -106,20 +107,28 @@ export default {
     this.scroller = this.$el
 
     this.$bus.$on('syncFinished', () => {
-      this.refresh()
+      if (this.folderId === getCurUsrStarFolderId() || this.folderId === getCurUsrRecentFolderId()) {
+        this.refresh()
+      }
     })
   },
 
   methods: {
     loadNoteList (skip) {
       const self = this
-      let params = {skip: skip, limit: self.limit}
+      let params = {}
 
       if (self.folderId === getCurUsrStarFolderId()) {
         params.starred = 1
+      } else if (self.folderId === getCurUsrSearchFolderId()) {
+        params.search = self.searchStr
       } else if (self.folderId !== undefined) {
         params.folder_id = self.folderId
       }
+
+      params.skip = skip
+      params.limit = self.limit
+
       Model.getNoteList(params)
         .then(function (response) {
           if (skip === 0) {
