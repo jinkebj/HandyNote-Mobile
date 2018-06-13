@@ -122,7 +122,7 @@ export default {
         params.starred = 1
       } else if (self.folderId === getCurUsrSearchFolderId()) {
         params.search = self.searchStr
-      } else if (self.folderId !== undefined) {
+      } else if (self.folderId !== getCurUsrRecentFolderId() && self.folderId !== undefined) {
         params.folder_id = self.folderId
       }
 

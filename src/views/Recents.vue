@@ -4,7 +4,7 @@
 
     <div class="page-content">
       <my-note-widget></my-note-widget>
-      <my-note-list></my-note-list>
+      <my-note-list :folderId="recentFolderId"></my-note-list>
     </div>
 
     <my-footer></my-footer>
@@ -26,6 +26,7 @@
 </style>
 
 <script>
+import {getCurUsrRecentFolderId} from '@/util'
 import MyHeader from '@/components/TopBar'
 import MyNoteWidget from '@/components/AddNoteWidget'
 import MyNoteList from '@/components/NoteList'
@@ -37,6 +38,12 @@ export default {
     MyNoteWidget,
     MyNoteList,
     MyFooter
+  },
+
+  data () {
+    return {
+      recentFolderId: getCurUsrRecentFolderId()
+    }
   }
 }
 </script>
