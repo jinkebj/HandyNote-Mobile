@@ -1,5 +1,6 @@
 // import Pica from 'pica'
 import Pica from './../../node_modules/pica/dist/pica.min'
+import Delta from 'quill-delta'
 import {maxUploadPicSize} from '@/../config'
 export * from '@/util/filters'
 
@@ -66,6 +67,26 @@ export const prepareFolderData = (folderData, folderStatisticsData) => {
   itemMap.get(rootItem.id).type = 0
 
   return [itemMap.get(rootItem.id)]
+}
+
+export const loadContentWithDelta = (quill, items) => {
+  const maxOpsCount = 500
+  // if note content contains table, don't split
+  if (items.length < maxOpsCount || JSON.stringify(items).indexOf('"tdbr":true') >= 0) {
+    quill.setContents(items)
+    return
+  }
+
+  quill.setText('')
+  let chunkCount = Math.ceil(items.length / maxOpsCount)
+  for (let i = chunkCount - 1; i >= 0; i--) {
+    let begin = maxOpsCount * i
+    let end = (begin + maxOpsCount) > items.length ? items.length : begin + maxOpsCount
+    let itemDelta = new Delta(items.slice(begin, end))
+    setTimeout(function () {
+      quill.updateContents(itemDelta)
+    }, 0)
+  }
 }
 
 const getImgObj = (url) => {

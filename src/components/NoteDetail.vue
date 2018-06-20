@@ -155,7 +155,7 @@
 </style>
 
 <script>
-import {HANDYNOTE_PROTOCOL, getResizedImgData} from '@/util'
+import {HANDYNOTE_PROTOCOL, getResizedImgData, loadContentWithDelta} from '@/util'
 import Model from '@/models'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/atom-one-light.css'
@@ -229,7 +229,8 @@ export default {
 
           let contentsJson = (typeof response.data.contents === 'object' ? response.data.contents
             : JSON.parse(response.data.contents))
-          self.quill.setContents(self.handleImgUrl(contentsJson))
+          // self.quill.setContents(self.handleImgUrl(contentsJson))
+          loadContentWithDelta(self.quill, self.handleImgUrl(contentsJson))
 
           // go to edit mode if the note is newly created
           if (self.editMode === false && contentsJson.length === 0 && response.data.deleted === 0) {
@@ -297,7 +298,8 @@ export default {
         .then(function (response) {
           let contentsJson = (typeof response.data.contents === 'object' ? response.data.contents
             : JSON.parse(response.data.contents))
-          self.quill.setContents(self.handleImgUrl(contentsJson))
+          // self.quill.setContents(self.handleImgUrl(contentsJson))
+          loadContentWithDelta(self.quill, self.handleImgUrl(contentsJson))
           self.loadingFlag = false
           self.noteItem = response.data
           self.toggleeditMode()
@@ -336,7 +338,8 @@ export default {
       self.noteItem.name = self.originNoteName
       let contentsJson = (typeof self.noteItem.contents === 'object' ? self.noteItem.contents
         : JSON.parse(self.noteItem.contents))
-      self.quill.setContents(self.handleImgUrl(contentsJson))
+      // self.quill.setContents(self.handleImgUrl(contentsJson))
+      loadContentWithDelta(self.quill, self.handleImgUrl(contentsJson))
       self.toggleeditMode()
     },
 
