@@ -71,8 +71,10 @@ export const prepareFolderData = (folderData, folderStatisticsData) => {
 
 export const loadContentWithDelta = (quill, items) => {
   const maxOpsCount = 500
-  // if note content contains table, don't split
-  if (items.length < maxOpsCount || JSON.stringify(items).indexOf('"tdbr":true') >= 0) {
+  // if note content contains table or code block, don't split
+  if (items.length < maxOpsCount ||
+    JSON.stringify(items).indexOf('"tdbr":true') >= 0 ||
+    JSON.stringify(items).indexOf('"code-block":true') >= 0) {
     quill.setContents(items)
     return
   }
