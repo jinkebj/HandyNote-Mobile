@@ -5,15 +5,7 @@ import {maxUploadPicSize} from '@/../config'
 export * from '@/util/filters'
 
 export const prepareFolderData = (folderData, folderStatisticsData) => {
-  let rootItem = {
-    type: 0,
-    id: getCurUsrRootFolderId(),
-    label: getCurUsrRootFolderName(),
-    ancestor_ids: [],
-    children: [],
-    note_count_cur: 0, // count of notes under current folder
-    note_count_all: 0 // count of notes under current folder and all sub folders
-  }
+  let rootItem = JSON.parse(JSON.stringify(getRootFolderItem())) // deep copy
   if (typeof folderData !== 'object' || folderData.length === 0) return [rootItem]
 
   let itemMap = new Map()
@@ -141,6 +133,19 @@ export const getDefaultBaseAPIUrl = () => { return process.env.HANDYNOTE_SERVICE
 export const getCurBaseAPIUrl = () => { return window.localStorage.getItem('hn-base-api-url') || getDefaultBaseAPIUrl() }
 
 export const HANDYNOTE_PROTOCOL = 'handynote://'
+
+export const getRootFolderItem = () => {
+  const ret = {
+    type: 0,
+    id: getCurUsrRootFolderId(),
+    label: getCurUsrRootFolderName(),
+    ancestor_ids: [],
+    children: [],
+    note_count_cur: 0, // count of notes under current folder
+    note_count_all: 0 // count of notes under current folder and all sub folders
+  }
+  return ret
+}
 
 export const getCurUsrId = () => { return window.localStorage.getItem('hn-user') }
 

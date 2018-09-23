@@ -41,7 +41,7 @@
 
 <script>
 import Model from '@/models'
-import {getCurUsrRootFolderId, getCurUsrRootFolderName, getCurUsrTrashFolderId} from '@/util'
+import {getRootFolderItem, getCurUsrTrashFolderId} from '@/util'
 import FolderItem from '@/components/FolderItem'
 
 export default {
@@ -52,23 +52,15 @@ export default {
   data () {
     return {
       trashFolderId: getCurUsrTrashFolderId(),
-      noteFolders: [
-        {
-          type: 0,
-          id: getCurUsrRootFolderId(),
-          label: getCurUsrRootFolderName(),
-          ancestor_ids: [],
-          children: [],
-          note_count_cur: 0, // count of notes under current folder
-          note_count_all: 0 // count of notes under current folder and all sub folders
-        }
-      ],
+      noteFolders: [getRootFolderItem()],
       refreshing: false,
       trigger: null
     }
   },
 
   mounted () {
+    // use cached folder list first
+    this.noteFolders = JSON.parse(window.localStorage.getItem('hn-folder-list-cache') || JSON.stringify(this.noteFolders))
     this.loadFolderList()
     this.trigger = this.$el
 
@@ -83,6 +75,7 @@ export default {
       Model.getFolderTreeData()
         .then(function (response) {
           self.noteFolders = response.data
+          window.localStorage.setItem('hn-folder-list-cache', JSON.stringify(response.data))
           self.refreshing = false
         })
         .catch(function (error) {
