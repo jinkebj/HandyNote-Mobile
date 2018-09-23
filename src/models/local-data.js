@@ -6,8 +6,8 @@ const db = new Dexie('HandyNote')
 
 // define local db schema
 db.version(1).stores({
-  notes: '&_id, name, text, contents, *folder_id, starred, deleted, owner, *usn, folder_name, digest, created_at, updated_at',
-  folders: '&_id, name, parent_id, ancestor_ids, deleted, owner, *usn, created_at, updated_at'
+  notes: '&_id, folder_id, starred',
+  folders: '&_id'
 })
 
 LocalData.clear = async () => {
