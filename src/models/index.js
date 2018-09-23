@@ -44,6 +44,7 @@ Model.sync = async () => {
 
 Model.clearLocalData = async () => {
   window.localStorage.removeItem('hn-local-usn')
+  window.localStorage.removeItem('hn-folder-list-cache')
   await LocalData.clear()
 }
 
