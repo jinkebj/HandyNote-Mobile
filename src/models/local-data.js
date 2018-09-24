@@ -7,7 +7,7 @@ const db = new Dexie('HandyNote')
 // define local db schema
 db.version(1).stores({
   notes: '&_id, folder_id, starred, updated_at, [folder_id+updated_at], [starred+updated_at]',
-  folders: '&_id'
+  folders: '&_id, name'
 })
 
 LocalData.clear = async () => {
@@ -102,7 +102,7 @@ LocalData.getAllFolderIds = async () => {
 }
 
 LocalData.getFolderTreeData = async (params) => {
-  let foldersData = await db.folders.toCollection().sortBy('name')
+  let foldersData = await db.folders.orderBy('name').toArray()
 
   // handle exclude_id for move folder
   if (params !== undefined && params !== null && params.exclude_id !== undefined) {
