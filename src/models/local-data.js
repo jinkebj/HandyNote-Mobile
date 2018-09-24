@@ -6,7 +6,7 @@ const db = new Dexie('HandyNote')
 
 // define local db schema
 db.version(1).stores({
-  notes: '&_id, folder_id, starred',
+  notes: '&_id, folder_id, starred, updated_at, [folder_id+updated_at], [starred+updated_at]',
   folders: '&_id'
 })
 
@@ -53,18 +53,23 @@ LocalData.getNoteList = async (params) => {
 
   let query
   if (JSON.stringify(params) === JSON.stringify({})) {
-    query = db.notes.toCollection().reverse()
+    query = db.notes.orderBy('updated_at').reverse()
+  } else if (params.folder_id !== undefined) {
+    query = db.notes.where('[folder_id+updated_at]').between(
+      [params.folder_id, Dexie.minKey],
+      [params.folder_id, Dexie.maxKey]).reverse()
+  } else if (params.starred !== undefined) {
+    query = db.notes.where('[starred+updated_at]').between(
+      [params.starred, Dexie.minKey],
+      [params.starred, Dexie.maxKey]).reverse()
   } else {
     query = db.notes.where(params).reverse()
   }
 
-  // if (skip >= 0) query = query.offset(skip)
-  // if (limit > 0) query = query.limit(limit)
+  if (skip >= 0) query = query.offset(skip)
+  if (limit > 0) query = query.limit(limit)
 
-  let retData = await query.sortBy('updated_at')
-
-  if (skip >= 0) retData = retData.slice(skip)
-  if (limit > 0) retData = retData.slice(0, limit)
+  let retData = await query.toArray()
 
   return { data: retData }
 }
