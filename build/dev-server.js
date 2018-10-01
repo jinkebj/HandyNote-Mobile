@@ -11,9 +11,8 @@ var express = require('express')
 var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = require('./webpack.dev.conf')
+var portfinder = require('portfinder')
 
-// default port where dev server listens for incoming traffic
-var port = process.env.HANDYNOTE_WEB_PORT || config.dev.port
 // automatically open browser, if not set will be false
 var autoOpenBrowser = !!config.dev.autoOpenBrowser
 // Define HTTP proxies to your custom API backend
@@ -63,25 +62,29 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
-var uri = 'http://localhost:' + port
-
 var _resolve
 var readyPromise = new Promise(resolve => {
   _resolve = resolve
 })
 
-console.log('> Starting dev server...')
-devMiddleware.waitUntilValid(() => {
-  console.log('> Listening at ' + uri + '\n')
-  // when env is testing, don't need open it
-  if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
-    opn(uri)
-  }
-  _resolve()
-})
-
-var server = app.listen(port)
-server.on('connection', socket => socket.setTimeout(30000))
+// find a port and start server
+portfinder.getPortPromise()
+  .then((port) => {
+    app.listen(port).on('connection', socket => socket.setTimeout(30000))
+    console.log('> Starting dev server...')
+    const uri = 'http://localhost:' + port
+    devMiddleware.waitUntilValid(() => {
+      console.log('> Listening at ' + uri + '\n')
+      // when env is testing, don't need open it
+      if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
+        opn(uri)
+      }
+      _resolve()
+    })
+  })
+  .catch((err) => {
+    console.error('> Could not find a port! \n')
+  })
 
 module.exports = {
   ready: readyPromise,

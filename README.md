@@ -20,10 +20,9 @@ npm install -g cordova
 # install dependencies
 npm install
 
-# Optional, set HANDYNOTE_WEB_PORT & HANDYNOTE_SERVICE_API
-# if not set, will use HANDYNOTE_WEB_PORT=9081, HANDYNOTE_SERVICE_API=http://localhost:3000/api
+# Optional, set HANDYNOTE_SERVICE_API
+# if not set, will use HANDYNOTE_SERVICE_API=http://localhost:3000/api
 # please refer to https://github.com/jinkebj/HandyNote-Service/blob/master/README.md to setup HandyNote-Service debug env
-export HANDYNOTE_WEB_PORT={portnum} # only apply for debug mode
 export HANDYNOTE_SERVICE_API=http://IP:Port/api
 
 # run in debug mode with hot reload
