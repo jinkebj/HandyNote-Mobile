@@ -3,12 +3,23 @@
     <my-header></my-header>
 
     <div class="page-content">
-      <mu-list-item disabled class="login-info">
-        <div slot="title" class="login-user">{{loginUser}}</div>
-        <mu-avatar slot="left" icon="person" />
-      </mu-list-item>
+      <mu-list class="list-bg">
+        <mu-list-item :title="loginUser" describeText="Logged in">
+          <mu-avatar slot="left" icon="person" />
+        </mu-list-item>
+      </mu-list>
 
-      <mu-raised-button label="Logout" primary @click="logout" />
+      <mu-divider />
+
+      <mu-list class="list-bg">
+        <mu-sub-header>Settings</mu-sub-header>
+        <mu-list-item title="Language" describeText="english" />
+        <mu-list-item title="Auto sync">
+          <mu-switch slot="right"/>
+        </mu-list-item>
+      </mu-list>
+
+      <mu-raised-button primary class="logout-button" label="Logout" @click="logout" />
     </div>
 
     <my-footer></my-footer>
@@ -25,19 +36,21 @@
 .page-content {
   background: #F5F5F5;
   flex: 1 1 auto;
-  padding: 30px;
+  position: relative; /* need this to position inner content */
+  overflow-y: auto;
 
   display: flex;
   flex-direction: column;
 }
 
-.login-info {
-  padding-bottom: 30px;
+.list-bg {
+  background: #FFFFFF;
 }
 
-.login-user {
-  font-size: 18px;
-  color: #324057;
+.logout-button {
+  width: 80%;
+  align-self: center;
+  margin: 20px 0;
 }
 </style>
 
