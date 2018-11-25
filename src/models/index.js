@@ -17,14 +17,14 @@ Model.sync = async () => {
   }
 
   // delete non-exist notes from local data
-  let localNoteIds = (await LocalData.getAllNoteIds()).join(',')
+  let localNoteIds = await LocalData.getAllNoteIds()
   let nonExistNoteIds = (await RemoteData.getNotExistNoteIds(localNoteIds)).data
   for (let nonExistNoteId of nonExistNoteIds) {
     await LocalData.deleteNote(nonExistNoteId)
   }
 
   // delete non-exist folders from local data
-  let localFolderIds = (await LocalData.getAllFolderIds()).join(',')
+  let localFolderIds = await LocalData.getAllFolderIds()
   let nonExistFolderIds = (await RemoteData.getNotExistFolderIds(localFolderIds)).data
   for (let nonExistFolderId of nonExistFolderIds) {
     await LocalData.deleteFolderOnly(nonExistFolderId)

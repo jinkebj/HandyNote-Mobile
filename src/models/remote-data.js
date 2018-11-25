@@ -23,11 +23,11 @@ RemoteData.getProfile = () => {
   return http.get(getCurBaseAPIUrl() + '/profiles')
 }
 
-RemoteData.getNotExistNoteIds = (idsStr) => {
+RemoteData.getNotExistNoteIds = (idArray) => {
   return http.post(getCurBaseAPIUrl() + '/notes/action',
     {
       action: 'filter_non_exist',
-      ids: idsStr
+      ids: idArray
     }
   )
 }
@@ -56,11 +56,11 @@ RemoteData.updateImage = (id, params) => {
   return http.post(getCurBaseAPIUrl() + '/images/' + id, params)
 }
 
-RemoteData.getNotExistFolderIds = (idsStr) => {
+RemoteData.getNotExistFolderIds = (idArray) => {
   return http.post(getCurBaseAPIUrl() + '/folders/action',
     {
       action: 'filter_non_exist',
-      ids: idsStr
+      ids: idArray
     }
   )
 }
